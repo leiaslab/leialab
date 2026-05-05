@@ -21,7 +21,7 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left: visual card */}
           <div className="relative flex justify-center lg:justify-start">
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-md pt-5 pb-6 px-5">
               {/* Main card */}
               <div className="bg-[#0d0d1a] border border-purple-900/40 rounded-3xl p-8 shadow-2xl">
                 {/* Avatar */}
@@ -58,14 +58,14 @@ export default function About() {
               </div>
 
               {/* Floating badge */}
-              <div className="absolute -top-4 -right-4 bg-gradient-to-br from-pink-600 to-purple-700 rounded-xl px-4 py-2 shadow-lg">
+              <div className="absolute top-0 right-0 bg-gradient-to-br from-pink-600 to-purple-700 rounded-xl px-4 py-2 shadow-lg">
                 <p className="text-white text-xs font-semibold">
                   Tecnología con propósito
                 </p>
               </div>
 
               {/* Powered by badge */}
-              <div className="absolute -bottom-4 -left-4 bg-[#0d0d1a] border border-purple-700/40 rounded-xl px-4 py-2 shadow-lg flex items-center gap-2">
+              <div className="absolute bottom-0 left-0 bg-[#0d0d1a] border border-purple-700/40 rounded-xl px-4 py-2 shadow-lg flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
                 <span className="text-gray-300 text-xs font-medium">
                   Powered by Leia Lab

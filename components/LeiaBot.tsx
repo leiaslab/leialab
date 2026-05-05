@@ -20,6 +20,7 @@ type Message = {
   from: "bot" | "user";
   text: string;
   timestamp: number;
+  showWA?: boolean;
 };
 
 function makeInitialMessages(): Message[] {
@@ -28,14 +29,8 @@ function makeInitialMessages(): Message[] {
     {
       id: "init-1",
       from: "bot",
-      text: "Hola, soy LeiaBot 🐾 ¿Querés cotizar una app, automatización o sistema para tu negocio?",
+      text: "Hola, soy LeiaBot 🐾 ¿Querés cotizar una app, automatización o sistema para tu negocio? Elegí una opción o escribime lo que necesitás 👇",
       timestamp: now,
-    },
-    {
-      id: "init-2",
-      from: "bot",
-      text: "Elegí una opción o escribime lo que necesitás 👇",
-      timestamp: now + 1,
     },
   ];
 }
@@ -56,7 +51,7 @@ const AUTO_RESPONSES: Record<string, string> = {
   "5": "¡Claro! Mariano está disponible para charlar sobre tu proyecto. Hacé clic en el botón de WhatsApp para contactarlo 👇",
 };
 
-const STORAGE_KEY = "leiabot_v2";
+const STORAGE_KEY = "leiabot_v3";
 const WA_NUMBER   = "541132751198";
 
 function fmtTime(ts: number) {
@@ -91,7 +86,7 @@ function BotAvatar({ size }: { size: number }) {
 
 export default function LeiaBot() {
   const [open, setOpen]           = useState(false);
-  const [messages, setMessages]   = useState<Message[]>(() => makeInitialMessages());
+  const [messages, setMessages]   = useState<Message[]>([]);
   const [input, setInput]         = useState("");
   const [showOptions, setOptions] = useState(true);
   const [pulse, setPulse]         = useState(false);
@@ -102,6 +97,7 @@ export default function LeiaBot() {
   /* Load localStorage */
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
+    let restored = false;
     if (saved) {
       try {
         const parsed: Message[] = JSON.parse(saved);
@@ -109,8 +105,12 @@ export default function LeiaBot() {
         if (hasUserMsg) {
           setMessages(parsed);
           setOptions(false);
+          restored = true;
         }
       } catch { /* ignore */ }
+    }
+    if (!restored) {
+      setMessages(makeInitialMessages());
     }
     const t = setTimeout(() => setPulse(true), 3500);
     return () => clearTimeout(t);
@@ -146,7 +146,7 @@ export default function LeiaBot() {
     setTyping(true);
     setTimeout(() => {
       setTyping(false);
-      addMessage({ from: "bot", text: AUTO_RESPONSES[opt.id] });
+      addMessage({ from: "bot", text: AUTO_RESPONSES[opt.id], showWA: true });
     }, 800);
   }
 
@@ -161,7 +161,8 @@ export default function LeiaBot() {
       setTyping(false);
       addMessage({
         from: "bot",
-        text: "¡Gracias por tu mensaje! Mariano lo va a ver pronto. También podés contactarlo directo por WhatsApp 👇",
+        text: "¡Gracias por tu mensaje! Mariano lo va a ver pronto.",
+        showWA: true,
       });
     }, 900);
   }
@@ -188,7 +189,24 @@ export default function LeiaBot() {
         aria-label={open ? "Cerrar chat" : "Abrir chat"}
         className="fixed bottom-6 right-6 z-[100] group"
       >
-        <div className="relative w-[68px] h-[68px]">
+        <div className="relative w-[87px] h-[87px]">
+
+          {/* Speech bubble loop */}
+          {!open && (
+            <div
+              className="absolute bottom-full right-0 mb-3 pointer-events-none"
+              style={{ animation: "leiabot-bubble 4s ease-in-out infinite" }}
+            >
+              <div className="relative bg-[#1c1c32] border border-purple-600/50 rounded-2xl rounded-br-sm px-5 py-3 shadow-xl whitespace-nowrap"
+                style={{ boxShadow: "0 0 16px rgba(139,92,246,0.3)" }}
+              >
+                <span className="text-sm font-semibold text-purple-200">¡Guau guau! Soy LeiaBot 🐾</span>
+                {/* Triangle pointing down-right */}
+                <span className="absolute -bottom-[6px] right-4 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#1c1c32]" />
+              </div>
+            </div>
+          )}
+
           {/* Neon ring */}
           <div
             className="absolute inset-0 rounded-full p-[2.5px] transition-all duration-300 group-hover:scale-105"
@@ -201,8 +219,8 @@ export default function LeiaBot() {
               <Image
                 src={AVATAR_SRC}
                 alt="LeiaBot"
-                width={68}
-                height={68}
+                width={87}
+                height={87}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -228,7 +246,8 @@ export default function LeiaBot() {
 
       {/* ── Chat window ── */}
       {open && (
-        <div className="fixed bottom-[96px] right-6 z-[99] w-[420px] max-w-[calc(100vw-1.5rem)]">
+        <div className="fixed inset-x-0 bottom-[115px] z-[99] flex justify-end pointer-events-none px-4">
+        <div className="w-[500px] max-w-full pointer-events-auto">
           {/* Gradient border */}
           <div
             className="rounded-2xl overflow-hidden"
@@ -241,15 +260,15 @@ export default function LeiaBot() {
             <div className="rounded-[14px] bg-[#0d0d1a] flex flex-col overflow-hidden">
 
               {/* ── Header ── */}
-              <div className="flex items-center justify-between px-4 py-3.5"
+              <div className="flex items-center justify-between px-5 py-4"
                    style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center gap-3">
-                  <BotAvatar size={44} />
+                  <BotAvatar size={52} />
                   <div>
-                    <p className="text-white font-bold text-[15px] leading-tight">LeiaBot</p>
+                    <p className="text-white font-bold text-lg leading-tight">LeiaBot</p>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-green-400 text-xs font-medium">En línea</span>
+                      <span className="text-green-400 text-sm font-medium">En línea</span>
                     </div>
                   </div>
                 </div>
@@ -258,29 +277,27 @@ export default function LeiaBot() {
                     onClick={handleClear}
                     className="p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
                   >
-                    <MoreHorizontal size={18} />
+                    <MoreHorizontal size={20} />
                   </button>
                   <button
                     onClick={() => setOpen(false)}
                     className="p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
                   >
-                    <X size={18} />
+                    <X size={20} />
                   </button>
                 </div>
               </div>
 
               {/* ── Messages ── */}
-              <div className="overflow-y-auto px-4 py-4 space-y-4 max-h-[460px] min-h-[180px]">
+              <div className="overflow-y-auto px-5 py-5 space-y-5 max-h-[520px] min-h-[200px]">
                 {messages.map(msg => (
                   <div
                     key={msg.id}
                     className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"} items-end gap-2.5`}
                   >
-                    {msg.from === "bot" && <BotAvatar size={30} />}
-
-                    <div className={`flex flex-col gap-1 max-w-[78%] ${msg.from === "user" ? "items-end" : "items-start"}`}>
+                    <div className={`flex flex-col gap-1 max-w-[88%] ${msg.from === "user" ? "items-end" : "items-start"}`}>
                       <div
-                        className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                        className={`px-4 py-3 rounded-2xl text-[16px] leading-relaxed ${
                           msg.from === "user"
                             ? "text-white rounded-br-sm"
                             : "text-gray-200 rounded-bl-sm"
@@ -293,7 +310,19 @@ export default function LeiaBot() {
                       >
                         {msg.text}
                       </div>
-                      <span className="text-[10px] text-gray-600 px-1">
+                      {msg.showWA && (
+                        <button
+                          onClick={sendWhatsApp}
+                          className="flex items-center gap-2 mt-1 px-3.5 py-2 rounded-xl border border-green-700/50 bg-green-900/20 text-green-400 text-sm font-medium hover:bg-green-800/30 hover:border-green-500/60 transition-all duration-200"
+                        >
+                          <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.121 1.531 5.847L.054 23.25a.75.75 0 00.916.916l5.403-1.477A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.714 9.714 0 01-4.964-1.364l-.355-.212-3.686 1.006 1.006-3.686-.212-.355A9.714 9.714 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z"/>
+                          </svg>
+                          Hablar con Mariano por WhatsApp
+                        </button>
+                      )}
+                      <span className="text-xs text-gray-600 px-1">
                         {fmtTime(msg.timestamp)}
                       </span>
                     </div>
@@ -303,7 +332,6 @@ export default function LeiaBot() {
                 {/* Typing indicator */}
                 {typing && (
                   <div className="flex items-end gap-2.5">
-                    <BotAvatar size={30} />
                     <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-[#1c1c32] flex gap-1 items-center">
                       <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0ms]" />
                       <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:150ms]" />
@@ -319,7 +347,7 @@ export default function LeiaBot() {
                       <button
                         key={opt.id}
                         onClick={() => handleOption(opt)}
-                        className="text-left px-3.5 py-2 rounded-xl border border-purple-700/40 bg-purple-900/15 text-purple-300 text-xs hover:bg-purple-800/30 hover:border-purple-500/60 hover:text-purple-200 transition-all duration-200"
+                        className="text-left px-4 py-2.5 rounded-xl border border-purple-700/40 bg-purple-900/15 text-purple-300 text-sm hover:bg-purple-800/30 hover:border-purple-500/60 hover:text-purple-200 transition-all duration-200"
                       >
                         {opt.label}
                       </button>
@@ -327,9 +355,9 @@ export default function LeiaBot() {
 
                     <button
                       onClick={sendWhatsApp}
-                      className="flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl border border-green-700/40 bg-green-900/15 text-green-400 text-xs hover:bg-green-800/25 hover:border-green-500/60 transition-all duration-200 mt-1"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-green-700/40 bg-green-900/15 text-green-400 text-sm hover:bg-green-800/25 hover:border-green-500/60 transition-all duration-200 mt-1"
                     >
-                      <MessageCircle size={13} />
+                      <MessageCircle size={15} />
                       Enviar resumen a Mariano por WhatsApp
                     </button>
                   </div>
@@ -339,9 +367,9 @@ export default function LeiaBot() {
               </div>
 
               {/* ── Input ── */}
-              <div className="px-4 pb-4 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="px-5 pb-5 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                 <div
-                  className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 focus-within:border-purple-600/50"
+                  className="flex items-center gap-3 rounded-2xl px-4 py-3.5 transition-all duration-200 focus-within:border-purple-600/50"
                   style={{
                     background: "#161628",
                     border: "1px solid rgba(255,255,255,0.07)",
@@ -354,7 +382,7 @@ export default function LeiaBot() {
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => e.key === "Enter" && handleSend()}
                     placeholder="Escribí tu mensaje..."
-                    className="flex-1 bg-transparent text-sm text-white placeholder-gray-600 outline-none"
+                    className="flex-1 bg-transparent text-base text-white placeholder-gray-600 outline-none"
                   />
                   <button className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0">
                     <Mic size={17} />
@@ -381,6 +409,7 @@ export default function LeiaBot() {
 
             </div>
           </div>
+        </div>
         </div>
       )}
     </>

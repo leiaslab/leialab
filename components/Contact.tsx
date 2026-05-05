@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Send, MessageCircle, AtSign, Mail, CheckCircle2, XCircle } from "lucide-react";
+import { Send, Mail, CheckCircle2, XCircle } from "lucide-react";
 import FormField from "./FormField";
 import Button from "./Button";
 import { contactSchema, type ContactFormData } from "./schemas";
@@ -156,8 +156,13 @@ export default function Contact() {
               rel="noopener noreferrer"
               className="group flex items-center gap-4 bg-[#0d0d1a] border border-green-900/40 hover:border-green-600/50 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5"
             >
-              <div className="p-3 rounded-xl bg-green-600/20 border border-green-600/20 group-hover:bg-green-600/30 transition-colors">
-                <MessageCircle size={22} className="text-green-400" />
+              <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                  <rect width="48" height="48" rx="10" fill="#25D366"/>
+                  <path d="M24 8C15.163 8 8 15.163 8 24c0 2.837.737 5.5 2.027 7.817L8 40l8.418-2.007A15.932 15.932 0 0024 40c8.837 0 16-7.163 16-16S32.837 8 24 8z" fill="#25D366"/>
+                  <path d="M24 10.4C16.48 10.4 10.4 16.48 10.4 24c0 2.624.72 5.08 1.976 7.184L10.4 37.6l6.576-1.944A13.52 13.52 0 0024 37.6c7.52 0 13.6-6.08 13.6-13.6S31.52 10.4 24 10.4z" fill="white"/>
+                  <path d="M19.04 16.8c-.336-.784-.688-.8-1.008-.816-.264-.016-.56-.016-.856-.016-.296 0-.784.112-1.192.56-.408.448-1.56 1.528-1.56 3.72s1.592 4.312 1.816 4.608c.224.296 3.088 4.92 7.6 6.704 3.76 1.488 4.52 1.192 5.336 1.12.816-.072 2.624-1.072 2.992-2.112.368-1.04.368-1.928.256-2.112-.112-.184-.408-.296-.856-.52-.448-.224-2.624-1.296-3.032-1.44-.408-.144-.704-.224-1 .224-.296.448-1.144 1.44-1.408 1.736-.256.296-.52.336-.968.112-.448-.224-1.888-.696-3.6-2.224-1.328-1.184-2.232-2.648-2.488-3.096-.256-.448-.024-.688.2-.912.2-.2.448-.52.672-.784.224-.264.296-.448.448-.744.144-.296.08-.56-.04-.784-.12-.224-.984-2.424-1.352-3.24z" fill="#25D366"/>
+                </svg>
               </div>
               <div>
                 <p className="text-white font-semibold text-sm">WhatsApp</p>
@@ -171,8 +176,25 @@ export default function Contact() {
               rel="noopener noreferrer"
               className="group flex items-center gap-4 bg-[#0d0d1a] border border-pink-900/40 hover:border-pink-600/50 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5"
             >
-              <div className="p-3 rounded-xl bg-pink-600/20 border border-pink-600/20 group-hover:bg-pink-600/30 transition-colors">
-                <AtSign size={22} className="text-pink-400" />
+              <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                  <defs>
+                    <radialGradient id="ig-grad1" cx="30%" cy="107%" r="150%">
+                      <stop offset="0%" stopColor="#ffd600"/>
+                      <stop offset="50%" stopColor="#ff6f00"/>
+                      <stop offset="100%" stopColor="#e91e8c"/>
+                    </radialGradient>
+                    <radialGradient id="ig-grad2" cx="0%" cy="100%" r="100%">
+                      <stop offset="0%" stopColor="#8b5cf6"/>
+                      <stop offset="100%" stopColor="#8b5cf600"/>
+                    </radialGradient>
+                  </defs>
+                  <rect width="48" height="48" rx="10" fill="url(#ig-grad1)"/>
+                  <rect width="48" height="48" rx="10" fill="url(#ig-grad2)"/>
+                  <rect x="10" y="10" width="28" height="28" rx="8" stroke="white" strokeWidth="2.8" fill="none"/>
+                  <circle cx="24" cy="24" r="7" stroke="white" strokeWidth="2.8" fill="none"/>
+                  <circle cx="33" cy="15" r="2" fill="white"/>
+                </svg>
               </div>
               <div>
                 <p className="text-white font-semibold text-sm">Instagram</p>

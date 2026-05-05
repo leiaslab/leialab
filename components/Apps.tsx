@@ -79,13 +79,13 @@ export default function Apps() {
     setActiveIndex((i) => Math.min(apps.length - visibleCount, i + 1));
 
   return (
-    <section id="apps" className="py-24 relative overflow-hidden">
+    <section id="apps" className="py-14 relative overflow-hidden scroll-mt-20">
       {/* Background accent */}
       <div className="glow-blob w-80 h-80 bg-purple-700 top-10 right-0 absolute" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-pink-400 mb-3">
             Aplicaciones
           </span>

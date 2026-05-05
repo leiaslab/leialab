@@ -76,7 +76,7 @@ export default function UseCases() {
         </div>
 
         {/* Cases — horizontal scroll on mobile, grid on desktop */}
-        <div className="flex gap-5 overflow-x-auto pb-4 md:grid md:grid-cols-3 md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-thin">
+        <div className="flex gap-5 overflow-x-auto pb-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-thin">
           {cases.map((c) => {
             const Icon = c.icon;
             return (

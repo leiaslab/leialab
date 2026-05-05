@@ -2,7 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { ArrowRight, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
 import Button from "./Button";
+import RubiksCube from "./RubiksCube";
 
 export default function Hero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -107,22 +109,17 @@ export default function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center pt-24 pb-20">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-purple-700/50 bg-purple-900/20 text-purple-300 text-xs font-medium mb-8">
-          <span className="w-1.5 h-1.5 rounded-full bg-pink-400 animate-pulse" />
-          Tecnología con propósito. Soluciones que transforman.
-        </div>
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center pt-32 pb-16">
 
         {/* Heading */}
-        <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-6">
+        <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold leading-tight mb-6 mt-[38px]">
           <span className="text-white">Apps web y </span>
           <span className="gradient-text">automatizaciones</span>
           <br />
           <span className="text-white">para negocios reales</span>
         </h1>
 
-        <p className="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+        <p className="text-gray-400 text-xl sm:text-2xl max-w-2xl mx-auto mb-10 leading-relaxed">
           Herramientas simples, visuales y funcionales para ordenar procesos,
           ahorrar tiempo y vender mejor.
         </p>
@@ -131,25 +128,31 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             onClick={() => window.location.href = '#apps'}
-            className="text-base px-8 py-4"
+            className="text-lg px-10 py-5"
             icon={ArrowRight}
-            iconSize={20}
+            iconSize={22}
           >
             Ver aplicaciones
           </Button>
           <Button
             variant="outline"
             onClick={() => window.location.href = '#contacto'}
-            className="text-base px-8 py-4"
+            className="text-lg px-10 py-5"
             icon={MessageCircle}
-            iconSize={20}
+            iconSize={22}
           >
             Contactar
           </Button>
         </div>
 
-        {/* Floating code snippet */}
-        <div className="mt-16 inline-block text-left bg-[#0d0d1a]/80 backdrop-blur-sm border border-purple-900/40 rounded-xl p-4 font-mono text-sm shadow-2xl">
+        {/* Floating code snippet — aparece al hacer scroll */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="mt-16 inline-block text-left bg-[#0d0d1a]/80 backdrop-blur-sm border border-purple-900/40 rounded-xl p-4 font-mono text-sm shadow-2xl"
+        >
           <div className="flex items-center gap-1.5 mb-3">
             <div className="w-3 h-3 rounded-full bg-red-500/60" />
             <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
@@ -182,7 +185,12 @@ export default function Hero() {
             </div>
             <div className="text-gray-400">{"}"}</div>
           </div>
-        </div>
+        </motion.div>
+      </div>
+
+      {/* Rubik's Cube — solo desktop */}
+      <div className="absolute top-[30%] -translate-y-1/2 z-10 hidden xl:block" style={{ right: "clamp(6.4rem, calc(6vw + 2.4rem), 11.4rem)" }}>
+        <RubiksCube />
       </div>
 
       {/* Scroll indicator */}
