@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "Leia Lab",
   ],
   icons: {
-    icon: "/favicon.png",
+    icon: "/leialab_logo.png",
   },
 };
 
