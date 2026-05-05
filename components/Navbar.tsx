@@ -25,9 +25,9 @@ export default function Navbar() {
           <Image
             src="/leia-logo.png"
             alt="Leia Lab"
-            width={130}
-            height={46}
-            className="object-contain"
+            width={48}
+            height={48}
+            className="h-11 w-11 object-contain"
           />
         </Link>
 
