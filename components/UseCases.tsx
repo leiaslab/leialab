@@ -55,7 +55,7 @@ const cases = [
 
 export default function UseCases() {
   return (
-    <section id="casos" className="py-24 relative overflow-hidden">
+    <section id="casos" className="hidden md:block py-24 relative overflow-hidden">
       {/* Background accent */}
       <div className="glow-blob w-80 h-80 bg-blue-700 top-1/2 right-10 absolute opacity-10" />
 
