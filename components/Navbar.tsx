@@ -19,17 +19,24 @@ export default function Navbar() {
 
   return (
     <header className="absolute inset-x-0 top-0 z-50">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 relative">
-        {/* Logo mobile — queda en el navbar */}
-        <Link href="/" className="relative z-50 flex-shrink-0 md:hidden">
-          <Image
-            src="/leia-logo.png"
-            alt="Leia Lab"
-            width={48}
-            height={48}
-            className="h-11 w-11 object-contain"
-          />
-        </Link>
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-16 relative">
+
+        {/* Logo mobile — centrado, se desvanece al abrir el menú */}
+        <div
+          className={`absolute left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-300 ease-in-out ${
+            open ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"
+          }`}
+        >
+          <Link href="/" onClick={() => setOpen(false)}>
+            <Image
+              src="/leia-logo.png"
+              alt="Leia Lab"
+              width={64}
+              height={64}
+              className="h-14 w-14 object-contain drop-shadow-[0_0_10px_rgba(233,30,140,0.5)]"
+            />
+          </Link>
+        </div>
 
         {/* Logo desktop — posición decorativa sobre el hero */}
         <Link href="/" className="relative z-50 flex-shrink-0 hidden md:block">
@@ -37,7 +44,7 @@ export default function Navbar() {
             src="/leia-logo.png"
             alt="Leia Lab"
             width={298}
-            height={104}
+            height={298}
             className="object-contain"
             style={{
               transform: "translateY(151px) translateX(clamp(-152px, calc(-1 * (max(0px, (100vw - 1280px) / 2) + 16px) - 76px), -92px))"
@@ -45,7 +52,7 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Desktop links — centrados y bajados 2.5cm */}
+        {/* Desktop links — centrados */}
         <ul className="hidden md:flex items-center gap-0.5 absolute left-1/2 top-[calc(50%+1cm)] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
           {links.map((link) => (
             <li key={link.href}>
@@ -64,26 +71,29 @@ export default function Navbar() {
                 "
               >
                 {link.label}
-                {/* línea inferior animada */}
                 <span className="absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] w-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 transition-all duration-300 group-hover:w-2/3" />
               </a>
             </li>
           ))}
         </ul>
 
-        {/* Mobile menu button */}
+        {/* Mobile hamburger — derecha */}
         <button
-          className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
+          className="md:hidden ml-auto p-2 text-gray-400 hover:text-white transition-colors z-50"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
-          {open ? <X size={20} /> : <Menu size={20} />}
+          {open ? <X size={22} /> : <Menu size={22} />}
         </button>
       </nav>
 
-      {/* Mobile menu */}
-      {open && (
-        <div className="md:hidden bg-[#0d0d1a]/95 backdrop-blur-md border-b border-purple-900/30">
+      {/* Mobile menu — con transición de altura */}
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="bg-[#0d0d1a]/95 backdrop-blur-md border-b border-purple-900/30">
           <ul className="flex flex-col px-4 py-4 gap-4">
             {links.map((link) => (
               <li key={link.href}>
@@ -107,7 +117,7 @@ export default function Navbar() {
             </li>
           </ul>
         </div>
-      )}
+      </div>
     </header>
   );
 }
