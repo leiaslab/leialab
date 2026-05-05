@@ -20,8 +20,19 @@ export default function Navbar() {
   return (
     <header className="absolute inset-x-0 top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 relative">
-        {/* Logo */}
-        <Link href="/" className="relative z-50 flex-shrink-0">
+        {/* Logo mobile — queda en el navbar */}
+        <Link href="/" className="relative z-50 flex-shrink-0 md:hidden">
+          <Image
+            src="/leia-logo.png"
+            alt="Leia Lab"
+            width={130}
+            height={46}
+            className="object-contain"
+          />
+        </Link>
+
+        {/* Logo desktop — posición decorativa sobre el hero */}
+        <Link href="/" className="relative z-50 flex-shrink-0 hidden md:block">
           <Image
             src="/leia-logo.png"
             alt="Leia Lab"
