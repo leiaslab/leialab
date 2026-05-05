@@ -9,7 +9,6 @@ import {
   MessageCircle,
   Package,
   FileText,
-  User,
   MoreHorizontal,
   Zap,
 } from "lucide-react";
@@ -40,7 +39,6 @@ const QUICK_OPTIONS = [
   { id: "2", label: "Quiero automatizar WhatsApp",  Icon: MessageCircle,  color: "#22c55e" },
   { id: "3", label: "Necesito un sistema de stock", Icon: Package,        color: "#f97316" },
   { id: "4", label: "Quiero pedir presupuesto",     Icon: FileText,       color: "#64748b" },
-  { id: "5", label: "Hablar con Mariano",            Icon: User,           color: "#8b5cf6" },
 ];
 
 const AUTO_RESPONSES: Record<string, string> = {
@@ -187,7 +185,7 @@ export default function LeiaBot() {
       <button
         onClick={() => setOpen(v => !v)}
         aria-label={open ? "Cerrar chat" : "Abrir chat"}
-        className="fixed bottom-6 right-6 z-[100] group"
+        className="hidden md:block fixed bottom-6 right-6 z-[100] group"
       >
         <div className="relative w-[87px] h-[87px]">
 
@@ -246,7 +244,7 @@ export default function LeiaBot() {
 
       {/* ── Chat window ── */}
       {open && (
-        <div className="fixed inset-x-0 bottom-[115px] z-[99] flex justify-end pointer-events-none px-4">
+        <div className="hidden md:flex fixed inset-x-0 bottom-[115px] z-[99] justify-end pointer-events-none px-4">
         <div className="w-[500px] max-w-full pointer-events-auto">
           {/* Gradient border */}
           <div
