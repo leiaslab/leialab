@@ -73,7 +73,7 @@ export default function Contact() {
           {/* Form */}
           <div className="lg:col-span-3">
             {sent && !serverError ? (
-              <div className="flex flex-col items-center justify-center h-full py-16 text-center bg-[#0d0d1a] rounded-2xl border border-purple-900/30">
+              <div className="flex flex-col items-center justify-center h-full py-10 sm:py-16 text-center bg-[#0d0d1a] rounded-2xl border border-purple-900/30">
                 <CheckCircle2 size={48} className="text-green-400 mb-4" />
                 <h3 className="text-white font-semibold text-xl mb-2">
                   ¡Mensaje enviado!
@@ -83,7 +83,7 @@ export default function Contact() {
                 </p>
               </div>
             ) : serverError ? (
-              <div className="flex flex-col items-center justify-center h-full py-16 text-center bg-[#0d0d1a] rounded-2xl border border-red-900/30">
+              <div className="flex flex-col items-center justify-center h-full py-10 sm:py-16 text-center bg-[#0d0d1a] rounded-2xl border border-red-900/30">
                 <XCircle size={48} className="text-red-400 mb-4" />
                 <h3 className="text-white font-semibold text-xl mb-2">
                   ¡Error al enviar el mensaje!
@@ -95,7 +95,7 @@ export default function Contact() {
             ) : (
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-[#0d0d1a] border border-purple-900/30 rounded-2xl p-8 space-y-5"
+                className="bg-[#0d0d1a] border border-purple-900/30 rounded-2xl p-5 sm:p-8 space-y-5"
               >
                 {/* Honeypot Field - Invisible para usuarios */}
                 <div className="absolute opacity-0 -z-10 h-0 w-0 overflow-hidden" aria-hidden="true">

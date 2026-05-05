@@ -29,7 +29,7 @@ export default function Footer() {
                 alt="Leia Lab"
                 width={200}
                 height={50}
-                className="object-contain"
+                className="h-10 w-auto object-contain"
               />
             </div>
             <p className="text-gray-500 text-sm leading-relaxed max-w-xs">

@@ -74,7 +74,7 @@ export default function Services() {
             return (
               <div
                 key={service.title}
-                className="group relative bg-[#0d0d1a] border border-purple-900/30 rounded-2xl p-8 hover:border-purple-500/40 transition-all duration-300"
+                className="group relative bg-[#0d0d1a] border border-purple-900/30 rounded-2xl p-5 sm:p-8 hover:border-purple-500/40 transition-all duration-300"
               >
                 {/* Number */}
                 <span className="absolute top-6 right-6 text-5xl font-bold text-purple-900/30 group-hover:text-purple-800/40 transition-colors select-none">
@@ -85,7 +85,7 @@ export default function Services() {
                   <div className="p-3 rounded-xl bg-gradient-to-br from-pink-600/20 to-purple-700/20 border border-pink-500/20">
                     <Icon size={22} className="text-pink-400" />
                   </div>
-                  <h3 className="text-white font-semibold text-xl leading-snug pt-1">
+                  <h3 className="text-white font-semibold text-xl leading-snug pt-1 min-w-0">
                     {service.title}
                   </h3>
                 </div>

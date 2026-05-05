@@ -90,7 +90,7 @@ export default function Hero() {
   return (
     <section
       id="inicio"
-      className="relative flex items-center justify-center overflow-hidden"
+      className="relative flex items-center justify-center overflow-hidden min-h-svh"
     >
       {/* Particle canvas */}
       <canvas
@@ -109,10 +109,10 @@ export default function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center pt-32 pb-16">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center pt-24 sm:pt-32 pb-12 sm:pb-16">
 
         {/* Heading */}
-        <h1 className="text-5xl sm:text-6xl lg:text-8xl font-bold leading-tight mb-6 mt-[38px]">
+        <h1 className="text-[clamp(1.75rem,7.5vw,5rem)] font-bold leading-tight mb-6 mt-8 break-words">
           <span className="text-white">Apps web y </span>
           <span className="gradient-text">automatizaciones</span>
           <br />
@@ -151,7 +151,7 @@ export default function Hero() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="mt-16 inline-block text-left bg-[#0d0d1a]/80 backdrop-blur-sm border border-purple-900/40 rounded-xl p-4 font-mono text-sm shadow-2xl"
+          className="mt-16 block w-full max-w-sm sm:max-w-md overflow-x-auto text-left bg-[#0d0d1a]/80 backdrop-blur-sm border border-purple-900/40 rounded-xl p-4 font-mono text-sm shadow-2xl"
         >
           <div className="flex items-center gap-1.5 mb-3">
             <div className="w-3 h-3 rounded-full bg-red-500/60" />
