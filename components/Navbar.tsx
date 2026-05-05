@@ -29,11 +29,11 @@ export default function Navbar() {
         >
           <Link href="/" onClick={() => setOpen(false)}>
             <Image
-              src="/leialab_logo.png"
+              src="/leia-logo.png"
               alt="Leia Lab"
               width={64}
               height={64}
-              className="h-14 w-14 object-contain drop-shadow-[0_0_12px_rgba(233,30,140,0.6)]"
+              className="h-14 w-14 object-contain drop-shadow-[0_0_10px_rgba(233,30,140,0.5)]"
             />
           </Link>
         </div>
