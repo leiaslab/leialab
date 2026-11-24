@@ -31,7 +31,7 @@ export default function Navbar() {
 
   return (
     <header ref={headerRef} className="relative z-40">
-      <nav aria-label="Navegación principal" className="mx-auto grid min-h-40 max-w-6xl grid-cols-[48px_minmax(0,1fr)_48px] items-center px-4 sm:px-6 md:flex md:min-h-36 md:justify-between md:gap-6">
+      <nav aria-label="Navegación principal" className="mx-auto grid min-h-40 max-w-6xl grid-cols-[48px_minmax(0,1fr)_48px] items-center px-4 pt-5 sm:px-6 md:flex md:min-h-36 md:justify-between md:gap-6 md:pt-0">
         <a href="#inicio" onClick={() => setOpen(false)} aria-label="Leia Lab, inicio" className="col-start-2 row-start-1 shrink-0 justify-self-center rounded-xl">
           <Image src="/leia-logo.png" alt="Leia Lab" width={160} height={160} sizes="(min-width: 768px) 144px, 160px" preload className="h-40 w-40 object-contain md:h-36 md:w-36" />
         </a>
