@@ -1,15 +1,7 @@
 import Image from "next/image";
-import { INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
 import ContactIcon from "./ContactIcon";
-
-const navLinks = [
-  { label: "Inicio", href: "#inicio" },
-  { label: "Apps", href: "#apps" },
-  { label: "Servicios", href: "#servicios" },
-  { label: "Casos de uso", href: "#casos" },
-  { label: "Sobre mí", href: "#sobre-mi" },
-  { label: "Contacto", href: "#contacto" },
-];
+import { INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
+import { NAV_LINKS } from "./navigation";
 
 const socials = [
   { channel: "whatsapp", href: WHATSAPP_URL, label: "WhatsApp" },
@@ -19,77 +11,18 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-purple-900/30 bg-[#07070f]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-          {/* Brand */}
-          <div>
-            <div className="relative mb-4 aspect-[3/1] w-full max-w-[320px] overflow-hidden">
-              <Image
-                src="/footer-logo.png"
-                alt="Leia Lab"
-                fill
-                sizes="320px"
-                className="object-cover"
-              />
-            </div>
-            <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
-              Tecnología con propósito. Soluciones que transforman.
-            </p>
-          </div>
-
-          {/* Links */}
-          <div>
-            <p className="text-gray-400 font-semibold text-sm mb-4 uppercase tracking-widest text-xs">
-              Navegación
-            </p>
-            <ul className="space-y-2">
-              {navLinks.map((l) => (
-                <li key={l.href}>
-                  <a
-                    href={l.href}
-                    className="text-gray-500 hover:text-gray-200 text-sm transition-colors"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Social */}
-          <div>
-            <p className="text-gray-400 font-semibold text-sm mb-4 uppercase tracking-widest text-xs">
-              Contacto
-            </p>
-            <div className="flex gap-3">
-              {socials.map(({ channel, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="p-2.5 rounded-xl bg-[#0d0d1a] border border-purple-900/30 text-gray-400 hover:text-white hover:border-purple-600/50 transition-all"
-                >
-                  <ContactIcon channel={channel} size={24} />
-                </a>
-              ))}
-            </div>
+    <footer className="pb-24">
+      <div className="mx-auto max-w-6xl px-4 pt-7 sm:px-6">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <a href="#inicio" aria-label="Leia Lab, volver al inicio" className="relative block aspect-[3/1] w-full max-w-[320px] overflow-hidden rounded-xl">
+            <Image src="/footer-logo.png" alt="Leia Lab" fill sizes="320px" className="object-cover" />
+          </a>
+          <div className="flex flex-col gap-5 md:items-end">
+            <nav aria-label="Navegación del pie"><ul className="flex flex-wrap gap-x-5 gap-y-2">{NAV_LINKS.map(link => <li key={link.href}><a href={link.href} className="inline-flex min-h-11 items-center rounded-md text-sm text-slate-300 hover:text-white">{link.label}</a></li>)}</ul></nav>
+            <div className="flex gap-4">{socials.map(({ channel, href, label }) => <a key={label} href={href} target={channel === "email" ? undefined : "_blank"} rel={channel === "email" ? undefined : "noopener noreferrer"} aria-label={label} className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 hover:bg-white/5"><ContactIcon channel={channel} size={24} /></a>)}</div>
           </div>
         </div>
-
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-purple-800/40 to-transparent mb-6" />
-
-        {/* Bottom */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-600">
-          <p>© {new Date().getFullYear()} Leia Lab — Todos los derechos reservados.</p>
-          <p>
-            Hecho con{" "}
-            <span className="text-pink-500">♥</span> por Mariano Arrieta
-          </p>
-        </div>
+        <p className="mt-6 border-t border-white/10 pt-5 text-xs text-slate-400">© {new Date().getFullYear()} Leia Lab · Mariano Arrieta</p>
       </div>
     </footer>
   );

@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Leia Lab
 
-## Getting Started
+Sitio de Leia Lab, desarrollado con Next.js App Router, React, TypeScript y Tailwind CSS.
 
-First, run the development server:
+## Desarrollo
 
-```bash
+```sh
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La página se encuentra en `app/page.tsx` y tiene cuatro secciones: Inicio, Servicios, Proyectos y Contacto. Los enlaces de navegación están centralizados en `components/navigation.ts`; WhatsApp e Instagram, en `components/contact-info.ts`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+El contacto principal es WhatsApp. LeiaBot prepara una consulta local en el navegador y abre WhatsApp para que la persona complete el envío; no envía mensajes a un servidor. El historial se conserva en el navegador y se puede reiniciar desde el chat. No hay un formulario de correo activo.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Las partículas y el cubo respetan la preferencia de movimiento reducido. Las capturas públicas de los proyectos y sus fuentes están en `public/projects/`; los recursos oficiales de las marcas y sus fuentes, en `public/brand/`.
 
-## Learn More
+## Verificación
 
-To learn more about Next.js, take a look at the following resources:
+```sh
+npm run lint
+npm run build
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+El repositorio `leiaslab/leialab` despliega en Vercel al actualizar `main`. Los proyectos enlazados desde el portfolio son aplicaciones independientes.

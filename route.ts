@@ -31,7 +31,7 @@ const resend = new Resend(env.RESEND_API_KEY);
 export async function POST(request: Request) {
   try {
     const ip = (request.headers.get("x-forwarded-for") ?? "127.0.0.1").split(",")[0].trim();
-    const { success, limit, reset, remaining } = await ratelimit.limit(ip);
+    const { success, limit, reset } = await ratelimit.limit(ip);
 
     if (!success) {
       return NextResponse.json(

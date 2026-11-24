@@ -1,204 +1,32 @@
-"use client";
-
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Send, CheckCircle2, XCircle } from "lucide-react";
-import FormField from "./FormField";
-import Button from "./Button";
-import { contactSchema, type ContactFormData } from "./schemas";
-import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
+import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 import ContactIcon from "./ContactIcon";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
 
 export default function Contact() {
-  const [sent, setSent] = useState(false);
-  const [serverError, setServerError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ContactFormData>({
-    resolver: zodResolver(contactSchema),
-  });
-
-  const onSubmit = async (data: ContactFormData) => {
-    setServerError(false);
-    setErrorMessage("");
-
-    try {
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Fallo al enviar el email');
-      }
-
-      setSent(true);
-      reset(); // Limpia el formulario
-    } catch (err: any) {
-      console.error("Error al enviar el email:", err);
-      setServerError(true);
-      setErrorMessage(err instanceof Error ? err.message : "Error desconocido");
-    }
-  };
-
   return (
-    <section id="contacto" className="py-24 relative overflow-hidden">
-      {/* Background */}
-      <div className="glow-blob w-96 h-96 bg-pink-700 bottom-0 right-0 absolute opacity-10" />
-      <div className="glow-blob w-96 h-96 bg-purple-700 top-0 left-0 absolute opacity-10" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <span className="inline-block text-xs font-semibold tracking-widest uppercase text-pink-400 mb-3">
-            Contacto
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            Empecemos a{" "}
-            <span className="gradient-text">construir</span>
-          </h2>
-          <p className="text-gray-400 max-w-xl mx-auto">
-            Contame qué necesitás y te respondo en menos de 24 hs.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
-          {/* Form */}
-          <div className="lg:col-span-3">
-            {sent && !serverError ? (
-              <div className="flex flex-col items-center justify-center h-full py-10 sm:py-16 text-center bg-[#0d0d1a] rounded-2xl border border-purple-900/30">
-                <CheckCircle2 size={48} className="text-green-400 mb-4" />
-                <h3 className="text-white font-semibold text-xl mb-2">
-                  ¡Mensaje enviado!
-                </h3>
-                <p className="text-gray-400 text-sm">
-                  Te respondo pronto. Gracias por escribirme.
-                </p>
-              </div>
-            ) : serverError ? (
-              <div className="flex flex-col items-center justify-center h-full py-10 sm:py-16 text-center bg-[#0d0d1a] rounded-2xl border border-red-900/30">
-                <XCircle size={48} className="text-red-400 mb-4" />
-                <h3 className="text-white font-semibold text-xl mb-2">
-                  ¡Error al enviar el mensaje!
-                </h3>
-                <p className="text-gray-400 text-sm">
-                  {errorMessage || "Hubo un problema al enviar tu mensaje. Por favor, intentá de nuevo."}
-                </p>
-              </div>
-            ) : (
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="bg-[#0d0d1a] border border-purple-900/30 rounded-2xl p-5 sm:p-8 space-y-5"
-              >
-                {/* Honeypot Field - Invisible para usuarios */}
-                <div className="absolute opacity-0 -z-10 h-0 w-0 overflow-hidden" aria-hidden="true">
-                  <input
-                    type="text"
-                    {...register("website")}
-                    tabIndex={-1}
-                    autoComplete="off"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <FormField
-                    label="Nombre"
-                    error={errors.name?.message}
-                    {...register("name")}
-                    placeholder="Tu nombre"
-                  />
-                  <FormField
-                    label="Email"
-                    type="email"
-                    error={errors.email?.message}
-                    {...register("email")}
-                    placeholder="tu@email.com"
-                  />
-                </div>
-
-                <FormField
-                  label="Mensaje"
-                  isTextArea
-                  rows={5}
-                  error={errors.message?.message}
-                  {...register("message")}
-                  placeholder="Contame qué necesitás..."
-                />
-
-                <Button
-                  type="submit"
-                  isLoading={isSubmitting}
-                  icon={Send}
-                  className="w-full"
-                >
-                  Enviar mensaje
-                </Button>
-              </form>
-            )}
-          </div>
-
-          {/* Contact links */}
-          <div className="lg:col-span-2 flex flex-col gap-4 justify-start">
-            <p className="text-gray-400 text-sm mb-2">
-              O contactame directamente:
-            </p>
-
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-4 bg-[#0d0d1a] border border-green-900/40 hover:border-green-600/50 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5"
-            >
-              <ContactIcon channel="whatsapp" />
-              <div>
-                <p className="text-white font-semibold text-sm">WhatsApp</p>
-                <p className="text-gray-500 text-xs">+54 9 11 2836-5690</p>
-              </div>
-            </a>
-
-            <a
-              href={INSTAGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-4 bg-[#0d0d1a] border border-pink-900/40 hover:border-pink-600/50 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5"
-            >
-              <ContactIcon channel="instagram" />
-              <div>
-                <p className="text-white font-semibold text-sm">Instagram</p>
-                <p className="text-gray-500 text-xs">@{INSTAGRAM_HANDLE}</p>
-              </div>
-            </a>
-
-            <a
-              href="mailto:hola@leialab.com"
-              className="group flex items-center gap-4 bg-[#0d0d1a] border border-purple-900/40 hover:border-purple-600/50 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5"
-            >
-              <ContactIcon channel="email" />
-              <div>
-                <p className="text-white font-semibold text-sm">Email</p>
-                <p className="text-gray-500 text-xs">hola@leialab.com</p>
-              </div>
-            </a>
-
-            {/* Tagline */}
-            <div className="mt-4 p-5 rounded-2xl bg-gradient-to-br from-pink-900/20 to-purple-900/20 border border-purple-700/30">
-              <p className="text-gray-300 text-sm italic leading-relaxed">
-                "Trabajo con negocios que quieren crecer sin complicarse. Si
-                tenés un proceso repetitivo, lo automatizamos."
-              </p>
-              <p className="text-pink-400 text-xs font-medium mt-2">
-                — Mariano Arrieta
-              </p>
+    <section id="contacto" aria-labelledby="contact-title" className="border-y border-white/10 bg-white/[0.015]">
+      <div className="mx-auto grid max-w-6xl gap-9 px-4 py-14 sm:px-6 sm:py-16 md:grid-cols-2 md:gap-14">
+        <div>
+          <h2 id="contact-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Contame tu idea.</h2>
+          <p className="mt-3 max-w-md text-base leading-relaxed text-slate-300">Lo vemos juntos y buscamos una solución simple para tu negocio.</p>
+          <div className="mt-7 flex items-start gap-4">
+            <Image src="/mariano.jpg" alt="Mariano Arrieta" width={56} height={56} className="h-14 w-14 shrink-0 rounded-full object-cover" />
+            <div>
+              <p className="font-semibold">Soy Mariano Arrieta</p>
+              <p className="mt-1 max-w-sm text-sm leading-relaxed text-slate-300">Desarrollo apps y automatizaciones. Te acompaño desde la idea hasta la puesta en marcha.</p>
             </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-start justify-center">
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="flex w-full items-center gap-4 rounded-2xl border border-green-500/30 bg-green-500/[0.06] p-5 transition-colors hover:bg-green-500/10">
+            <ContactIcon channel="whatsapp" size={40} />
+            <div className="min-w-0 flex-1"><p className="text-base font-semibold">Hablemos por WhatsApp</p><p className="mt-1 text-sm text-slate-300">+54 9 11 2836-5690</p></div>
+            <ArrowUpRight size={19} aria-hidden="true" className="shrink-0 text-slate-300" />
+          </a>
+          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-slate-300 hover:text-white"><ContactIcon channel="instagram" size={24} />@{INSTAGRAM_HANDLE}</a>
+            <a href="mailto:hola@leialab.com" className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-slate-300 hover:text-white"><ContactIcon channel="email" size={24} />hola@leialab.com</a>
           </div>
         </div>
       </div>

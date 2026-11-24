@@ -1,6 +1,5 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
-import * as z from 'zod';
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { contactSchema } from './schemas';
@@ -23,7 +22,7 @@ const resend = new Resend(env.RESEND_API_KEY);
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
-    const { success, limit, reset, remaining } = await ratelimit.limit(ip);
+    const { success, limit, reset } = await ratelimit.limit(ip);
 
     if (!success) {
       return NextResponse.json(

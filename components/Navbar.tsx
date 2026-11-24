@@ -1,121 +1,54 @@
 "use client";
 
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-
-const links = [
-  { label: "Inicio", href: "#inicio" },
-  { label: "Apps", href: "#apps" },
-  { label: "Servicios", href: "#servicios" },
-  { label: "Casos de uso", href: "#casos" },
-  { label: "Sobre mí", href: "#sobre-mi" },
-  { label: "Contacto", href: "#contacto" },
-];
+import { Menu, X } from "lucide-react";
+import { NAV_LINKS } from "./navigation";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function dismiss(event: PointerEvent) {
+      if (event.target instanceof Node && !headerRef.current?.contains(event.target)) setOpen(false);
+    }
+    function escape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    }
+    document.addEventListener("pointerdown", dismiss);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", dismiss);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [open]);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
-      {/* Desktop logo stays inside the viewport at every screen width. */}
-      <Link href="/" className="absolute left-6 top-8 z-50 hidden xl:block">
-        <Image
-          src="/leia-logo.png"
-          alt="Leia Lab"
-          width={224}
-          height={224}
-          sizes="(min-width: 1400px) 224px, 16vw"
-          className="h-auto w-[clamp(10rem,16vw,14rem)] object-contain"
-        />
-      </Link>
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-32 sm:h-40 xl:h-16 relative">
-
-        {/* Logo mobile — centrado, se desvanece al abrir el menú */}
-        <div
-          className={`absolute left-1/2 -translate-x-1/2 z-50 xl:hidden transition-all duration-300 ease-in-out ${
-            open ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"
-          }`}
-        >
-          <Link href="/" onClick={() => setOpen(false)}>
-            <Image
-              src="/leia-logo.png"
-              alt="Leia Lab"
-              width={128}
-              height={128}
-              sizes="(min-width: 640px) 144px, 112px"
-              className="h-28 w-28 sm:h-36 sm:w-36 object-contain drop-shadow-[0_0_10px_rgba(233,30,140,0.5)]"
-            />
-          </Link>
-        </div>
-
-        {/* Desktop links — centrados */}
-        <ul className="hidden xl:flex items-center gap-0.5 absolute left-1/2 top-[calc(50%+1cm)] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
-          {links.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="
-                  relative group inline-flex items-center px-4 py-2 rounded-full
-                  text-xl font-medium text-white/70
-                  border border-transparent
-                  transition-all duration-300 ease-out
-                  hover:text-white
-                  hover:border-purple-500/40
-                  hover:bg-white/5
-                  hover:scale-105
-                  hover:shadow-[0_0_18px_rgba(139,92,246,0.4),0_0_6px_rgba(233,30,140,0.2)]
-                "
-              >
-                {link.label}
-                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 h-[2px] w-0 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 transition-all duration-300 group-hover:w-2/3" />
-              </a>
-            </li>
+    <header ref={headerRef} className="relative z-40">
+      <nav aria-label="Navegación principal" className="mx-auto flex min-h-28 max-w-6xl items-center justify-between gap-6 px-4 sm:px-6 md:min-h-32">
+        <a href="#inicio" onClick={() => setOpen(false)} aria-label="Leia Lab, inicio" className="shrink-0 rounded-xl">
+          <Image src="/leia-logo.png" alt="Leia Lab" width={144} height={144} sizes="(min-width: 768px) 144px, 112px" preload className="h-28 w-28 object-contain md:h-36 md:w-36" />
+        </a>
+        <ul className="hidden items-center gap-8 md:flex">
+          {NAV_LINKS.map(link => (
+            <li key={link.href}><a href={link.href} className="rounded-md py-2 text-sm font-medium text-slate-300 transition-colors hover:text-white">{link.label}</a></li>
           ))}
         </ul>
-
-        {/* Mobile hamburger — derecha */}
-        <button
-          className="xl:hidden ml-auto p-2 text-gray-400 hover:text-white transition-colors z-50"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
+        <button ref={toggleRef} type="button" aria-label={open ? "Cerrar menú" : "Abrir menú"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(value => !value)} className="rounded-lg border border-white/15 p-3 text-slate-200 md:hidden">
+          {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
         </button>
       </nav>
-
-      {/* Mobile menu — con transición de altura */}
-      <div
-        className={`xl:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div className="bg-[#0d0d1a]/95 backdrop-blur-md border-b border-purple-900/30">
-          <ul className="flex flex-col px-4 py-4 gap-4">
-            {links.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="block px-4 py-1.5 rounded-full text-sm font-medium text-white transition-all duration-300 hover:bg-gradient-to-r hover:from-pink-600/20 hover:to-purple-600/20 hover:shadow-[0_0_10px_rgba(168,85,247,0.3)]"
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-            <li>
-              <a
-                href="#contacto"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-pink-600 to-purple-600 text-sm font-medium text-white"
-                onClick={() => setOpen(false)}
-              >
-                Contactar
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      {open && (
+        <nav id="mobile-navigation" aria-label="Navegación móvil" className="absolute inset-x-4 top-full rounded-2xl border border-white/15 bg-[#11111c] p-3 shadow-xl md:hidden">
+          <ul>{NAV_LINKS.map(link => <li key={link.href}><a href={link.href} onClick={() => setOpen(false)} className="block rounded-lg px-4 py-3 text-base text-slate-200 hover:bg-white/5">{link.label}</a></li>)}</ul>
+        </nav>
+      )}
     </header>
   );
 }

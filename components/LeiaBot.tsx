@@ -1,460 +1,108 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import {
-  X,
-  Send,
-  Mic,
-  Globe,
-  MessageCircle,
-  Package,
-  FileText,
-  MoreHorizontal,
-  Zap,
-} from "lucide-react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
-import { WHATSAPP_URL } from "./contact-info";
+import { RotateCcw, Send, X } from "lucide-react";
 import ContactIcon from "./ContactIcon";
+import { WHATSAPP_URL } from "./contact-info";
 
-type Message = {
-  id: string;
-  from: "bot" | "user";
-  text: string;
-  timestamp: number;
-  showWA?: boolean;
-};
-
-function makeInitialMessages(): Message[] {
-  const now = Date.now();
-  return [
-    {
-      id: "init-1",
-      from: "bot",
-      text: "Hola, soy LeiaBot 🐾 ¿Querés cotizar una app, automatización o sistema para tu negocio? Elegí una opción o escribime lo que necesitás 👇",
-      timestamp: now,
-    },
-  ];
-}
-
-const QUICK_OPTIONS = [
-  { id: "1", label: "Quiero una app web",           Icon: Globe,          color: "#8b5cf6" },
-  { id: "2", label: "Quiero automatizar WhatsApp",  Icon: MessageCircle,  color: "#22c55e" },
-  { id: "3", label: "Necesito un sistema de stock", Icon: Package,        color: "#f97316" },
-  { id: "4", label: "Quiero pedir presupuesto",     Icon: FileText,       color: "#64748b" },
-];
-
-const AUTO_RESPONSES: Record<string, string> = {
-  "1": "¡Genial! Desarrollamos apps web a medida con Next.js, paneles admin, dashboards y más. ¿Tenés una idea en mente? Contame o usá el botón de WhatsApp 🚀",
-  "2": "Automatizamos WhatsApp con bots inteligentes para responder clientes, enviar notificaciones y gestionar turnos automáticamente. ¿Querés que Mariano te explique cómo funciona? 🤖",
-  "3": "Desarrollamos sistemas de gestión de stock, inventario y ventas completamente a medida. Desde una tienda hasta una distribuidora. ¿Tenés algún requerimiento específico? 📦",
-  "4": "¡Perfecto! Para armar tu presupuesto personalizado necesitamos charlar. Escribime acá o contactá a Mariano directo por WhatsApp 👇",
-  "5": "¡Claro! Mariano está disponible para charlar sobre tu proyecto. Hacé clic en el botón de WhatsApp para contactarlo 👇",
-};
-
+type Message = { id: string; from: "bot" | "user"; text: string; timestamp: number };
 const STORAGE_KEY = "leiabot_v3";
-
-function fmtTime(ts: number) {
-  return new Date(ts).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+const OPTIONS = ["Una app para mi negocio", "Automatizar tareas", "Pedir presupuesto"];
+const NEXT_STEP = "Podés agregar más detalles o continuar en WhatsApp para hablar con Mariano.";
+function message(from: Message["from"], text: string): Message {
+  return { id: Date.now().toString(36) + Math.random().toString(36).slice(2), from, text, timestamp: Date.now() };
 }
-
-const AVATAR_SRC = "/images/leiabot.png";
-
-function BotAvatar({ size }: { size: number }) {
-  return (
-    <div
-      className="rounded-full flex-shrink-0 overflow-hidden"
-      style={{
-        width: size,
-        height: size,
-        background: "linear-gradient(135deg,#e91e8c,#8b5cf6)",
-        padding: 2,
-      }}
-    >
-      <div className="w-full h-full rounded-full overflow-hidden bg-[#0d0d1a]">
-        <Image
-          src={AVATAR_SRC}
-          alt="LeiaBot"
-          width={size}
-          height={size}
-          className="w-full h-full object-cover"
-        />
-      </div>
-    </div>
-  );
+function welcome(): Message[] {
+  return [message("bot", "Hola, soy LeiaBot. Contame tu idea y prepará tu consulta para Mariano. La enviás al continuar en WhatsApp.")];
+}
+function isMessage(value: unknown): value is Message {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Partial<Message>;
+  return typeof item.id === "string" && (item.from === "user" || item.from === "bot") && typeof item.text === "string" && typeof item.timestamp === "number";
+}
+function readHistory(): Message[] | null {
+  try {
+    const saved: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    if (!Array.isArray(saved) || !saved.every(isMessage) || !saved.some(item => item.from === "user")) return null;
+    return saved.slice(-50).map(item => item.from === "bot" && item.text.includes("Mariano lo va a ver pronto") ? { ...item, text: NEXT_STEP } : item);
+  } catch { return null; }
 }
 
 export default function LeiaBot() {
-  const [open, setOpen]           = useState(false);
-  const [messages, setMessages]   = useState<Message[]>([]);
-  const [input, setInput]         = useState("");
-  const [showOptions, setOptions] = useState(true);
-  const [pulse, setPulse]         = useState(false);
-  const [typing, setTyping]       = useState(false);
-  const bottomRef                 = useRef<HTMLDivElement>(null);
-  const inputRef                  = useRef<HTMLInputElement>(null);
-  const panelRef                  = useRef<HTMLDivElement>(null);
-  const toggleRef                 = useRef<HTMLButtonElement>(null);
-
-  /* Load localStorage */
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const panelRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const logRef = useRef<HTMLDivElement>(null);
+  const hasUserMessage = messages.some(item => item.from === "user");
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    let restored = false;
-    if (saved) {
-      try {
-        const parsed: Message[] = JSON.parse(saved);
-        const hasUserMsg = parsed.some(m => m.from === "user");
-        if (hasUserMsg) {
-          setMessages(parsed);
-          setOptions(false);
-          restored = true;
-        }
-      } catch { /* ignore */ }
-    }
-    if (!restored) {
-      setMessages(makeInitialMessages());
-    }
-    const t = setTimeout(() => setPulse(true), 3500);
-    return () => clearTimeout(t);
-  }, []);
-
-  /* Persist solo si hay mensajes del usuario */
-  useEffect(() => {
-    if (messages.some(m => m.from === "user")) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-    }
-  }, [messages]);
-
-  /* Auto-scroll */
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, typing]);
-
-  /* Focus on open */
+    if (!hasUserMessage) return;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(messages)); } catch { /* Storage is optional. */ }
+  }, [messages, hasUserMessage]);
+  useEffect(() => { if (open) inputRef.current?.focus({ preventScroll: true }); }, [open]);
+  useEffect(() => { if (open && logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight; }, [open, messages]);
   useEffect(() => {
     if (!open) return;
-    const timer = setTimeout(() => inputRef.current?.focus(), 150);
-    return () => clearTimeout(timer);
-  }, [open]);
-
-  /* Minimize without clearing the conversation when interacting outside. */
-  useEffect(() => {
-    if (!open) return;
-
-    function handleOutsidePointer(event: PointerEvent) {
-      const target = event.target;
-      if (
-        target instanceof Node &&
-        !panelRef.current?.contains(target) &&
-        !toggleRef.current?.contains(target)
-      ) {
-        setOpen(false);
-      }
+    function outside(event: PointerEvent) {
+      if (event.target instanceof Node && !panelRef.current?.contains(event.target) && !toggleRef.current?.contains(event.target)) setOpen(false);
     }
-
-    function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setOpen(false);
-        toggleRef.current?.focus();
-      }
+    function escape(event: KeyboardEvent) {
+      if (event.key === "Escape") { setOpen(false); toggleRef.current?.focus(); }
     }
-
-    document.addEventListener("pointerdown", handleOutsidePointer, true);
-    document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("pointerdown", handleOutsidePointer, true);
-      document.removeEventListener("keydown", handleEscape);
-    };
+    document.addEventListener("pointerdown", outside, true);
+    document.addEventListener("keydown", escape);
+    return () => { document.removeEventListener("pointerdown", outside, true); document.removeEventListener("keydown", escape); };
   }, [open]);
-
-  function addMessage(msg: Omit<Message, "id" | "timestamp">) {
-    setMessages(prev => [
-      ...prev,
-      { ...msg, id: Math.random().toString(36).slice(2), timestamp: Date.now() },
-    ]);
+  function toggle() {
+    if (!open && messages.length === 0) setMessages(readHistory() || welcome());
+    setOpen(value => !value);
   }
-
-  function handleOption(opt: (typeof QUICK_OPTIONS)[0]) {
-    setOptions(false);
-    addMessage({ from: "user", text: opt.label });
-    setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      addMessage({ from: "bot", text: AUTO_RESPONSES[opt.id], showWA: true });
-    }, 800);
-  }
-
-  function handleSend() {
-    const text = input.trim();
-    if (!text) return;
+  function addText(text: string) {
+    if (!text.trim()) return;
+    const next = message("user", text.trim());
+    const guidance = message("bot", NEXT_STEP);
+    setMessages(current => [...current, next, ...(current.some(item => item.from === "user") ? [] : [guidance])].slice(-50));
     setInput("");
-    setOptions(false);
-    addMessage({ from: "user", text });
-    setTyping(true);
-    setTimeout(() => {
-      setTyping(false);
-      addMessage({
-        from: "bot",
-        text: "¡Gracias por tu mensaje! Mariano lo va a ver pronto.",
-        showWA: true,
-      });
-    }, 900);
   }
-
-  function sendWhatsApp() {
-    const lines = messages.map(m => `${m.from === "bot" ? "LeiaBot" : "Vos"}: ${m.text}`);
-    const text  = encodeURIComponent(`Hola Mariano, resumen del chat en LeiaBot:\n\n${lines.join("\n")}`);
-    window.open(`${WHATSAPP_URL}?text=${text}`, "_blank");
+  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); addText(input); }
+  function continueOnWhatsApp() {
+    const lines = messages.filter(item => item.from === "user").slice(-20).map(item => item.text);
+    if (input.trim()) lines.push(input.trim());
+    const text = "Hola Mariano, te consulto desde Leia Lab:\n\n" + (lines.join("\n\n") || "Quiero conversar sobre un proyecto.");
+    window.open(WHATSAPP_URL + "?text=" + encodeURIComponent(text), "_blank", "noopener,noreferrer");
   }
-
-  function handleClear() {
-    const init = makeInitialMessages();
-    setMessages(init);
-    setOptions(true);
-    localStorage.removeItem(STORAGE_KEY);
+  function clear() {
+    setMessages(welcome()); setInput("");
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* Storage is optional. */ }
+    inputRef.current?.focus({ preventScroll: true });
   }
-
-  /* ─── RENDER ─── */
   return (
     <>
-      {/* ── Floating button ── */}
-      <button
-        ref={toggleRef}
-        onClick={() => {
-          setOpen(v => !v);
-          setPulse(false);
-        }}
-        aria-label={open ? "Minimizar chat" : "Abrir chat"}
-        aria-expanded={open}
-        aria-controls="leiabot-panel"
-        className="hidden md:block fixed bottom-6 right-6 z-[100] group"
-      >
-        <div className="relative w-[87px] h-[87px]">
-
-          {/* Speech bubble loop */}
-          {!open && (
-            <div
-              className="absolute bottom-full right-0 mb-3 pointer-events-none"
-              style={{ animation: "leiabot-bubble 4s ease-in-out infinite" }}
-            >
-              <div className="relative bg-[#1c1c32] border border-purple-600/50 rounded-2xl rounded-br-sm px-5 py-3 shadow-xl whitespace-nowrap"
-                style={{ boxShadow: "0 0 16px rgba(139,92,246,0.3)" }}
-              >
-                <span className="text-sm font-semibold text-purple-200">¡Guau guau! Soy LeiaBot 🐾</span>
-                {/* Triangle pointing down-right */}
-                <span className="absolute -bottom-[6px] right-4 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#1c1c32]" />
-              </div>
-            </div>
-          )}
-
-          {/* Neon ring */}
-          <div
-            className="absolute inset-0 rounded-full p-[2.5px] transition-all duration-300 group-hover:scale-105"
-            style={{
-              background: "linear-gradient(135deg,#e91e8c,#8b5cf6,#3b82f6)",
-              boxShadow: "0 0 18px rgba(139,92,246,0.55)",
-            }}
-          >
-            <div className="w-full h-full rounded-full overflow-hidden bg-[#07070f]">
-              <Image
-                src={AVATAR_SRC}
-                alt="LeiaBot"
-                width={87}
-                height={87}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Notification dot */}
-          {pulse && !open && (
-            <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-pink-500 border-2 border-[#07070f] animate-pulse z-10" />
-          )}
-
-          {/* Mini action badge */}
-          <div
-            className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center z-10 shadow-lg"
-            style={{ background: "linear-gradient(135deg,#e91e8c,#8b5cf6)" }}
-          >
-            {open
-              ? <X size={11} className="text-white" />
-              : <Send size={11} className="text-white -translate-x-px" />
-            }
-          </div>
-        </div>
+      <button ref={toggleRef} type="button" onClick={toggle} aria-label={open ? "Minimizar chat" : "Abrir chat"} aria-expanded={open} aria-controls="leiabot-panel" className="fixed bottom-4 right-4 z-[100] flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/25 bg-[#171725] shadow-lg sm:h-16 sm:w-16">
+        {open ? <X size={24} aria-hidden="true" /> : <Image src="/images/leiabot.png" alt="" width={64} height={64} className="h-full w-full object-cover" />}
       </button>
-
-      {/* ── Chat window ── */}
       {open && (
-        <div className="hidden md:flex fixed inset-x-0 bottom-[115px] z-[99] justify-end pointer-events-none px-4">
-        <div
-          ref={panelRef}
-          id="leiabot-panel"
-          role="region"
-          aria-label="Chat con LeiaBot"
-          className="flex h-[min(560px,calc(100dvh-131px))] w-[380px] min-h-0 max-w-full flex-col pointer-events-auto"
-        >
-          {/* Gradient border */}
-          <div
-            className="flex min-h-0 flex-1 flex-col rounded-2xl overflow-hidden"
-            style={{
-              padding: "1.5px",
-              background: "linear-gradient(135deg,#e91e8c,#8b5cf6,#3b82f6)",
-              boxShadow: "0 0 50px rgba(139,92,246,0.25), 0 20px 60px rgba(0,0,0,0.5)",
-            }}
-          >
-            <div className="min-h-0 flex-1 rounded-[14px] bg-[#0d0d1a] flex flex-col overflow-hidden">
-
-              {/* ── Header ── */}
-              <div className="flex shrink-0 items-center justify-between px-4 py-3"
-                   style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className="flex items-center gap-3">
-                  <BotAvatar size={40} />
-                  <div>
-                    <p className="text-white font-bold text-base leading-tight">LeiaBot</p>
-                    <div className="flex items-center gap-1.5 mt-0.5">
-                      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-green-400 text-xs font-medium">En línea</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-0.5">
-                  <button
-                    onClick={handleClear}
-                    aria-label="Reiniciar conversación"
-                    className="p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
-                  >
-                    <MoreHorizontal size={20} />
-                  </button>
-                  <button
-                    onClick={() => setOpen(false)}
-                    aria-label="Minimizar ventana de chat"
-                    className="p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-              </div>
-
-              {/* ── Messages ── */}
-              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 space-y-4">
-                {messages.map(msg => (
-                  <div
-                    key={msg.id}
-                    className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"} items-end gap-2.5`}
-                  >
-                    <div className={`flex min-w-0 flex-col gap-1 max-w-[88%] ${msg.from === "user" ? "items-end" : "items-start"}`}>
-                      <div
-                        className={`px-4 py-3 rounded-2xl text-sm leading-relaxed [overflow-wrap:anywhere] ${
-                          msg.from === "user"
-                            ? "text-white rounded-br-sm"
-                            : "text-gray-200 rounded-bl-sm"
-                        }`}
-                        style={
-                          msg.from === "user"
-                            ? { background: "linear-gradient(135deg,#e91e8c,#8b5cf6)" }
-                            : { background: "#1c1c32" }
-                        }
-                      >
-                        {msg.text}
-                      </div>
-                      {msg.showWA && (
-                        <button
-                          onClick={sendWhatsApp}
-                          className="flex items-center gap-2 mt-1 px-3.5 py-2 rounded-xl border border-green-700/50 bg-green-900/20 text-green-400 text-sm font-medium hover:bg-green-800/30 hover:border-green-500/60 transition-all duration-200"
-                        >
-                          <ContactIcon channel="whatsapp" size={16} />
-                          Hablar con Mariano por WhatsApp
-                        </button>
-                      )}
-                      <span className="text-xs text-gray-600 px-1">
-                        {fmtTime(msg.timestamp)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-
-                {/* Typing indicator */}
-                {typing && (
-                  <div className="flex items-end gap-2.5">
-                    <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-[#1c1c32] flex gap-1 items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:0ms]" />
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:150ms]" />
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce [animation-delay:300ms]" />
-                    </div>
-                  </div>
-                )}
-
-                {/* Quick options */}
-                {showOptions && (
-                  <div className="flex flex-col gap-2 pt-1">
-                    {QUICK_OPTIONS.map(opt => (
-                      <button
-                        key={opt.id}
-                        onClick={() => handleOption(opt)}
-                        className="text-left px-4 py-2.5 rounded-xl border border-purple-700/40 bg-purple-900/15 text-purple-300 text-sm hover:bg-purple-800/30 hover:border-purple-500/60 hover:text-purple-200 transition-all duration-200"
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-
-                    <button
-                      onClick={sendWhatsApp}
-                      className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-green-700/40 bg-green-900/15 text-green-400 text-sm hover:bg-green-800/25 hover:border-green-500/60 transition-all duration-200 mt-1"
-                    >
-                      <ContactIcon channel="whatsapp" size={16} />
-                      Enviar resumen a Mariano por WhatsApp
-                    </button>
-                  </div>
-                )}
-
-                <div ref={bottomRef} />
-              </div>
-
-              {/* ── Input ── */}
-              <div className="shrink-0 px-4 pb-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                <div
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 transition-all duration-200 focus-within:border-purple-600/50"
-                  style={{
-                    background: "#161628",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                  }}
-                >
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && handleSend()}
-                    placeholder="Escribí tu mensaje..."
-                    className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder-gray-600 outline-none"
-                  />
-                  <button className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0">
-                    <Mic size={17} />
-                  </button>
-                  <button
-                    onClick={handleSend}
-                    aria-label="Enviar mensaje"
-                    disabled={!input.trim()}
-                    className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-200 disabled:opacity-25"
-                    style={{
-                      background: "linear-gradient(135deg,#e91e8c,#8b5cf6)",
-                      boxShadow: input.trim() ? "0 0 14px rgba(139,92,246,0.5)" : "none",
-                    }}
-                  >
-                    <Send size={14} className="text-white translate-x-px" />
-                  </button>
-                </div>
-
-                {/* Footer */}
-                <div className="flex items-center justify-center gap-1.5 mt-2">
-                  <Zap size={11} className="text-yellow-400" />
-                  <span className="text-[11px] text-gray-600">Potenciado por Leia Lab</span>
-                </div>
-              </div>
-
-            </div>
+        <div ref={panelRef} id="leiabot-panel" role="region" aria-label="Chat con LeiaBot" className="fixed bottom-[88px] right-4 z-[99] flex h-[min(520px,calc(100dvh-104px))] w-[min(380px,calc(100vw-32px))] min-h-0 flex-col overflow-hidden rounded-2xl border border-violet-400/35 bg-[#11111c] shadow-2xl">
+          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
+            <div className="flex items-center gap-3"><Image src="/images/leiabot.png" alt="" width={36} height={36} className="h-9 w-9 rounded-full object-cover" /><div><p className="font-semibold">LeiaBot</p><p className="text-xs text-slate-300">Preparemos tu consulta</p></div></div>
+            <div className="flex"><button type="button" onClick={clear} aria-label="Reiniciar conversación" title="Reiniciar conversación" className="rounded-lg p-2.5 text-slate-300 hover:bg-white/5"><RotateCcw size={17} aria-hidden="true" /></button><button type="button" onClick={() => { setOpen(false); toggleRef.current?.focus(); }} aria-label="Minimizar ventana de chat" className="rounded-lg p-2.5 text-slate-300 hover:bg-white/5"><X size={19} aria-hidden="true" /></button></div>
           </div>
-        </div>
+          <div ref={logRef} role="log" aria-label="Conversación" aria-live="polite" className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
+            {messages.map(item => <div key={item.id} className={item.from === "user" ? "flex justify-end" : "flex justify-start"}><p className={"max-w-[90%] whitespace-pre-wrap rounded-2xl px-3.5 py-3 text-sm leading-relaxed [overflow-wrap:anywhere] " + (item.from === "user" ? "bg-violet-600 text-white" : "bg-white/5 text-slate-200")}><span className="sr-only">{item.from === "user" ? "Vos: " : "LeiaBot: "}</span>{item.text}</p></div>)}
+            {!hasUserMessage && <div className="flex flex-col gap-2">{OPTIONS.map(option => <button type="button" key={option} onClick={() => addText(option)} className="rounded-xl border border-white/15 px-3 py-2.5 text-left text-sm text-slate-200 hover:bg-white/5">{option}</button>)}</div>}
+          </div>
+          <div className="shrink-0 border-t border-white/10 p-3">
+            <form onSubmit={submit} className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-3 py-2">
+              <label htmlFor="leiabot-message" className="sr-only">Tu consulta para Mariano</label>
+              <input ref={inputRef} id="leiabot-message" value={input} onChange={event => setInput(event.target.value)} maxLength={600} aria-describedby="leiabot-help" placeholder="Contame qué necesitás..." className="min-w-0 flex-1 rounded bg-transparent py-1 text-sm text-white placeholder:text-slate-400" />
+              <button type="submit" aria-label="Agregar mensaje" disabled={!input.trim()} className="rounded-lg bg-violet-600 p-2 text-white hover:bg-violet-500 disabled:opacity-40"><Send size={17} aria-hidden="true" /></button>
+            </form>
+            <button type="button" onClick={continueOnWhatsApp} className="mt-3 flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-green-500/35 bg-green-500/10 px-3 py-2 text-sm font-semibold text-green-300 hover:bg-green-500/15"><ContactIcon channel="whatsapp" size={18} />Continuar en WhatsApp</button>
+            <p id="leiabot-help" className="mt-2 text-center text-xs text-slate-300">El envío se completa en WhatsApp.</p>
+          </div>
         </div>
       )}
     </>
