@@ -290,35 +290,36 @@ export default function LeiaBot() {
           id="leiabot-panel"
           role="region"
           aria-label="Chat con LeiaBot"
-          className="w-[500px] max-w-full pointer-events-auto"
+          className="flex h-[min(560px,calc(100dvh-131px))] w-[380px] min-h-0 max-w-full flex-col pointer-events-auto"
         >
           {/* Gradient border */}
           <div
-            className="rounded-2xl overflow-hidden"
+            className="flex min-h-0 flex-1 flex-col rounded-2xl overflow-hidden"
             style={{
               padding: "1.5px",
               background: "linear-gradient(135deg,#e91e8c,#8b5cf6,#3b82f6)",
               boxShadow: "0 0 50px rgba(139,92,246,0.25), 0 20px 60px rgba(0,0,0,0.5)",
             }}
           >
-            <div className="rounded-[14px] bg-[#0d0d1a] flex flex-col overflow-hidden">
+            <div className="min-h-0 flex-1 rounded-[14px] bg-[#0d0d1a] flex flex-col overflow-hidden">
 
               {/* ── Header ── */}
-              <div className="flex items-center justify-between px-5 py-4"
+              <div className="flex shrink-0 items-center justify-between px-4 py-3"
                    style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center gap-3">
-                  <BotAvatar size={52} />
+                  <BotAvatar size={40} />
                   <div>
-                    <p className="text-white font-bold text-lg leading-tight">LeiaBot</p>
+                    <p className="text-white font-bold text-base leading-tight">LeiaBot</p>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-green-400 text-sm font-medium">En línea</span>
+                      <span className="text-green-400 text-xs font-medium">En línea</span>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5">
                   <button
                     onClick={handleClear}
+                    aria-label="Reiniciar conversación"
                     className="p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
                   >
                     <MoreHorizontal size={20} />
@@ -334,15 +335,15 @@ export default function LeiaBot() {
               </div>
 
               {/* ── Messages ── */}
-              <div className="overflow-y-auto px-5 py-5 space-y-5 max-h-[520px] min-h-[200px]">
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 space-y-4">
                 {messages.map(msg => (
                   <div
                     key={msg.id}
                     className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"} items-end gap-2.5`}
                   >
-                    <div className={`flex flex-col gap-1 max-w-[88%] ${msg.from === "user" ? "items-end" : "items-start"}`}>
+                    <div className={`flex min-w-0 flex-col gap-1 max-w-[88%] ${msg.from === "user" ? "items-end" : "items-start"}`}>
                       <div
-                        className={`px-4 py-3 rounded-2xl text-[16px] leading-relaxed ${
+                        className={`px-4 py-3 rounded-2xl text-sm leading-relaxed [overflow-wrap:anywhere] ${
                           msg.from === "user"
                             ? "text-white rounded-br-sm"
                             : "text-gray-200 rounded-bl-sm"
@@ -412,9 +413,9 @@ export default function LeiaBot() {
               </div>
 
               {/* ── Input ── */}
-              <div className="px-5 pb-5 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="shrink-0 px-4 pb-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
                 <div
-                  className="flex items-center gap-3 rounded-2xl px-4 py-3.5 transition-all duration-200 focus-within:border-purple-600/50"
+                  className="flex items-center gap-2 rounded-xl px-3 py-2 transition-all duration-200 focus-within:border-purple-600/50"
                   style={{
                     background: "#161628",
                     border: "1px solid rgba(255,255,255,0.07)",
@@ -427,13 +428,14 @@ export default function LeiaBot() {
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => e.key === "Enter" && handleSend()}
                     placeholder="Escribí tu mensaje..."
-                    className="flex-1 bg-transparent text-base text-white placeholder-gray-600 outline-none"
+                    className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder-gray-600 outline-none"
                   />
                   <button className="text-gray-600 hover:text-gray-400 transition-colors flex-shrink-0">
                     <Mic size={17} />
                   </button>
                   <button
                     onClick={handleSend}
+                    aria-label="Enviar mensaje"
                     disabled={!input.trim()}
                     className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-200 disabled:opacity-25"
                     style={{
@@ -446,7 +448,7 @@ export default function LeiaBot() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-center gap-1.5 mt-3">
+                <div className="flex items-center justify-center gap-1.5 mt-2">
                   <Zap size={11} className="text-yellow-400" />
                   <span className="text-[11px] text-gray-600">Potenciado por Leia Lab</span>
                 </div>
