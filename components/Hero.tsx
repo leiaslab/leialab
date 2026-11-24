@@ -21,10 +21,10 @@ export default function Hero() {
         </div>
       </div>
       <div className="relative z-10 min-w-0">
-        <div aria-hidden="true" className="pointer-events-none hidden h-36 items-center justify-end lg:flex">
-          <div className="flex h-36 w-48 items-center justify-center"><div className="shrink-0 scale-50"><RubiksCube /></div></div>
+        <div aria-hidden="true" className="hero-cube pointer-events-none flex h-24 items-center justify-center lg:h-36">
+          <div className="flex h-24 w-36 items-center justify-center lg:h-36 lg:w-48"><div className="shrink-0 scale-[0.32] lg:scale-50"><RubiksCube /></div></div>
         </div>
-        <div aria-hidden="true" className="hero-code mx-auto w-full max-w-md rounded-2xl bg-gradient-to-br from-fuchsia-400/35 via-violet-400/25 to-blue-400/25 p-px shadow-[0_18px_70px_-24px_rgba(139,92,246,0.5)] lg:mt-8">
+        <div aria-hidden="true" className="hero-code mx-auto mt-6 w-full max-w-md rounded-2xl bg-gradient-to-br from-fuchsia-400/35 via-violet-400/25 to-blue-400/25 p-px shadow-[0_18px_70px_-24px_rgba(139,92,246,0.5)] lg:mt-8">
           <div className="overflow-hidden rounded-[15px] bg-[#10101f]/95">
             <div className="flex items-center gap-2 border-b border-white/10 bg-white/[0.025] px-4 py-3">
               <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
