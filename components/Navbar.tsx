@@ -31,16 +31,16 @@ export default function Navbar() {
 
   return (
     <header ref={headerRef} className="relative z-40">
-      <nav aria-label="Navegación principal" className="mx-auto flex min-h-[136px] max-w-6xl items-center justify-between gap-6 px-4 sm:px-6 md:min-h-36">
-        <a href="#inicio" onClick={() => setOpen(false)} aria-label="Leia Lab, inicio" className="shrink-0 rounded-xl">
-          <Image src="/leia-logo.png" alt="Leia Lab" width={144} height={144} sizes="(min-width: 768px) 144px, 136px" preload className="h-[136px] w-[136px] object-contain md:h-36 md:w-36" />
+      <nav aria-label="Navegación principal" className="mx-auto grid min-h-40 max-w-6xl grid-cols-[48px_minmax(0,1fr)_48px] items-center px-4 sm:px-6 md:flex md:min-h-36 md:justify-between md:gap-6">
+        <a href="#inicio" onClick={() => setOpen(false)} aria-label="Leia Lab, inicio" className="col-start-2 row-start-1 shrink-0 justify-self-center rounded-xl">
+          <Image src="/leia-logo.png" alt="Leia Lab" width={160} height={160} sizes="(min-width: 768px) 144px, 160px" preload className="h-40 w-40 object-contain md:h-36 md:w-36" />
         </a>
         <ul className="hidden items-center gap-8 md:flex">
           {NAV_LINKS.map(link => (
             <li key={link.href}><a href={link.href} className="rounded-md py-2 text-sm font-medium text-slate-300 transition-colors hover:text-white">{link.label}</a></li>
           ))}
         </ul>
-        <button ref={toggleRef} type="button" aria-label={open ? "Cerrar menú" : "Abrir menú"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(value => !value)} className="rounded-lg border border-white/15 p-3 text-slate-200 md:hidden">
+        <button ref={toggleRef} type="button" aria-label={open ? "Cerrar menú" : "Abrir menú"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(value => !value)} className="col-start-3 row-start-1 justify-self-end rounded-lg border border-white/15 p-3 text-slate-200 md:hidden">
           {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
         </button>
       </nav>
