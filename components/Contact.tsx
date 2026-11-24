@@ -8,7 +8,7 @@ import { Send, CheckCircle2, XCircle } from "lucide-react";
 import FormField from "./FormField";
 import Button from "./Button";
 import { contactSchema, type ContactFormData } from "./schemas";
-import { WHATSAPP_URL } from "./contact-info";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
 import ContactIcon from "./ContactIcon";
 
 export default function Contact() {
@@ -166,7 +166,7 @@ export default function Contact() {
             </a>
 
             <a
-              href="https://www.instagram.com/leialab.app?igsh=bXF3aDdkbXh6dnow&utm_source=qr"
+              href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-4 bg-[#0d0d1a] border border-pink-900/40 hover:border-pink-600/50 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5"
@@ -174,7 +174,7 @@ export default function Contact() {
               <ContactIcon channel="instagram" />
               <div>
                 <p className="text-white font-semibold text-sm">Instagram</p>
-                <p className="text-gray-500 text-xs">@leialab</p>
+                <p className="text-gray-500 text-xs">@{INSTAGRAM_HANDLE}</p>
               </div>
             </a>
 

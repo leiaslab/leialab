@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { WHATSAPP_URL } from "./contact-info";
+import { INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
 import ContactIcon from "./ContactIcon";
 
 const navLinks = [
@@ -13,7 +13,7 @@ const navLinks = [
 
 const socials = [
   { channel: "whatsapp", href: WHATSAPP_URL, label: "WhatsApp" },
-  { channel: "instagram", href: "https://www.instagram.com/leialab.app?igsh=bXF3aDdkbXh6dnow&utm_source=qr", label: "Instagram" },
+  { channel: "instagram", href: INSTAGRAM_URL, label: "Instagram" },
   { channel: "email", href: "mailto:hola@leialab.com", label: "Email" },
 ] as const;
 
@@ -24,13 +24,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {/* Brand */}
           <div>
-            <div className="mb-3">
+            <div className="relative mb-4 aspect-[3/1] w-full max-w-[320px] overflow-hidden">
               <Image
                 src="/footer-logo.png"
                 alt="Leia Lab"
-                width={200}
-                height={50}
-                className="h-10 w-auto object-contain"
+                fill
+                sizes="320px"
+                className="object-cover"
               />
             </div>
             <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
