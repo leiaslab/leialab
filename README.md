@@ -11,7 +11,7 @@ npm run dev
 
 La página se encuentra en `app/page.tsx` y tiene cuatro secciones: Inicio, Servicios, Casos de uso y Contacto. Los enlaces de navegación están centralizados en `components/navigation.ts`; WhatsApp, Instagram y el correo confirmado, en `components/contact-info.ts`. Si el correo está vacío, no se publica ningún enlace de email.
 
-El contacto principal es WhatsApp. LeiaBot prepara una consulta local en el navegador y, al enviar desde el formulario o tocar el botón de WhatsApp, abre la conversación para que la persona confirme el envío; no envía mensajes a un servidor. El historial se conserva en el navegador y se puede reiniciar desde el chat. No hay un formulario de correo activo.
+El contacto principal es WhatsApp. Al tocar LeiaBot o su saludo animado se abre directamente la conversación con Mariano, con un mensaje inicial preparado para que la persona confirme el envío en WhatsApp. El acceso funciona como un enlace HTML y no requiere JavaScript. No hay un chat intermedio, almacenamiento local de consultas ni un formulario de correo activo.
 
 Las partículas y el cubo respetan la preferencia de movimiento reducido. Las capturas públicas de los proyectos y sus fuentes están en `public/projects/`; los recursos oficiales de las marcas y sus fuentes, en `public/brand/`.
 
