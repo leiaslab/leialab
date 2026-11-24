@@ -145,52 +145,56 @@ export default function Hero() {
           </Button>
         </div>
 
-        {/* Floating code snippet — aparece al hacer scroll */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="mt-16 block w-full max-w-sm sm:max-w-md overflow-x-auto text-left bg-[#0d0d1a]/80 backdrop-blur-sm border border-purple-900/40 rounded-xl p-4 font-mono text-sm shadow-2xl"
-        >
-          <div className="flex items-center gap-1.5 mb-3">
-            <div className="w-3 h-3 rounded-full bg-red-500/60" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
-            <div className="w-3 h-3 rounded-full bg-green-500/60" />
-          </div>
-          <div className="space-y-1">
-            <div>
-              <span className="text-purple-400">function</span>
-              <span className="text-pink-400"> crearImpacto</span>
-              <span className="text-gray-400">() {"{"}</span>
+        {/* Code and cube have separate space below the main content. */}
+        <div className="mt-16 flex flex-col gap-12 xl:flex-row xl:items-center xl:justify-between">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="block w-full min-w-0 max-w-sm sm:max-w-md overflow-x-auto text-left bg-[#0d0d1a]/80 backdrop-blur-sm border border-purple-900/40 rounded-xl p-4 font-mono text-sm shadow-2xl"
+          >
+            <div className="flex items-center gap-1.5 mb-3">
+              <div className="w-3 h-3 rounded-full bg-red-500/60" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
+              <div className="w-3 h-3 rounded-full bg-green-500/60" />
             </div>
-            <div className="pl-4">
-              <span className="text-blue-400">const</span>
-              <span className="text-gray-300"> ideas </span>
-              <span className="text-pink-400">=</span>
-              <span className="text-green-400"> innovar()</span>
-              <span className="text-gray-400">;</span>
+            <div className="space-y-1">
+              <div>
+                <span className="text-purple-400">function</span>
+                <span className="text-pink-400"> crearImpacto</span>
+                <span className="text-gray-400">() {"{"}</span>
+              </div>
+              <div className="pl-4">
+                <span className="text-blue-400">const</span>
+                <span className="text-gray-300"> ideas </span>
+                <span className="text-pink-400">=</span>
+                <span className="text-green-400"> innovar()</span>
+                <span className="text-gray-400">;</span>
+              </div>
+              <div className="pl-4">
+                <span className="text-blue-400">const</span>
+                <span className="text-gray-300"> impacto </span>
+                <span className="text-pink-400">=</span>
+                <span className="text-green-400"> transformar()</span>
+                <span className="text-gray-400">;</span>
+              </div>
+              <div className="pl-4">
+                <span className="text-purple-400">return</span>
+                <span className="text-gray-300"> impacto</span>
+                <span className="text-gray-400">;</span>
+              </div>
+              <div className="text-gray-400">{"}"}</div>
             </div>
-            <div className="pl-4">
-              <span className="text-blue-400">const</span>
-              <span className="text-gray-300"> impacto </span>
-              <span className="text-pink-400">=</span>
-              <span className="text-green-400"> transformar()</span>
-              <span className="text-gray-400">;</span>
-            </div>
-            <div className="pl-4">
-              <span className="text-purple-400">return</span>
-              <span className="text-gray-300"> impacto</span>
-              <span className="text-gray-400">;</span>
-            </div>
-            <div className="text-gray-400">{"}"}</div>
-          </div>
-        </motion.div>
-      </div>
+          </motion.div>
 
-      {/* Rubik's Cube — solo desktop */}
-      <div className="absolute top-[30%] -translate-y-1/2 z-10 hidden xl:block" style={{ right: "clamp(6.4rem, calc(6vw + 2.4rem), 11.4rem)" }}>
-        <RubiksCube />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none hidden h-80 w-80 shrink-0 items-center justify-center xl:flex"
+          >
+            <RubiksCube />
+          </div>
+        </div>
       </div>
 
       {/* Scroll indicator */}

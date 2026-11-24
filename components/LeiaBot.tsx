@@ -91,6 +91,8 @@ export default function LeiaBot() {
   const [typing, setTyping]       = useState(false);
   const bottomRef                 = useRef<HTMLDivElement>(null);
   const inputRef                  = useRef<HTMLInputElement>(null);
+  const panelRef                  = useRef<HTMLDivElement>(null);
+  const toggleRef                 = useRef<HTMLButtonElement>(null);
 
   /* Load localStorage */
   useEffect(() => {
@@ -128,7 +130,39 @@ export default function LeiaBot() {
 
   /* Focus on open */
   useEffect(() => {
-    if (open) { setTimeout(() => inputRef.current?.focus(), 150); setPulse(false); }
+    if (!open) return;
+    const timer = setTimeout(() => inputRef.current?.focus(), 150);
+    return () => clearTimeout(timer);
+  }, [open]);
+
+  /* Minimize without clearing the conversation when interacting outside. */
+  useEffect(() => {
+    if (!open) return;
+
+    function handleOutsidePointer(event: PointerEvent) {
+      const target = event.target;
+      if (
+        target instanceof Node &&
+        !panelRef.current?.contains(target) &&
+        !toggleRef.current?.contains(target)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    }
+
+    document.addEventListener("pointerdown", handleOutsidePointer, true);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsidePointer, true);
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, [open]);
 
   function addMessage(msg: Omit<Message, "id" | "timestamp">) {
@@ -183,8 +217,14 @@ export default function LeiaBot() {
     <>
       {/* ── Floating button ── */}
       <button
-        onClick={() => setOpen(v => !v)}
-        aria-label={open ? "Cerrar chat" : "Abrir chat"}
+        ref={toggleRef}
+        onClick={() => {
+          setOpen(v => !v);
+          setPulse(false);
+        }}
+        aria-label={open ? "Minimizar chat" : "Abrir chat"}
+        aria-expanded={open}
+        aria-controls="leiabot-panel"
         className="hidden md:block fixed bottom-6 right-6 z-[100] group"
       >
         <div className="relative w-[87px] h-[87px]">
@@ -245,7 +285,13 @@ export default function LeiaBot() {
       {/* ── Chat window ── */}
       {open && (
         <div className="hidden md:flex fixed inset-x-0 bottom-[115px] z-[99] justify-end pointer-events-none px-4">
-        <div className="w-[500px] max-w-full pointer-events-auto">
+        <div
+          ref={panelRef}
+          id="leiabot-panel"
+          role="region"
+          aria-label="Chat con LeiaBot"
+          className="w-[500px] max-w-full pointer-events-auto"
+        >
           {/* Gradient border */}
           <div
             className="rounded-2xl overflow-hidden"
@@ -279,6 +325,7 @@ export default function LeiaBot() {
                   </button>
                   <button
                     onClick={() => setOpen(false)}
+                    aria-label="Minimizar ventana de chat"
                     className="p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
                   >
                     <X size={20} />
