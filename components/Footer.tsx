@@ -1,13 +1,5 @@
 import Image from "next/image";
-import ContactIcon from "./ContactIcon";
-import { CONTACT_EMAIL, INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
 import { NAV_LINKS } from "./navigation";
-
-const socials = [
-  { channel: "whatsapp", href: WHATSAPP_URL, label: "WhatsApp" },
-  { channel: "instagram", href: INSTAGRAM_URL, label: "Instagram" },
-  ...(CONTACT_EMAIL ? [{ channel: "email", href: `mailto:${CONTACT_EMAIL}`, label: "Email" } as const] : []),
-] as const;
 
 export default function Footer() {
   return (
@@ -19,7 +11,6 @@ export default function Footer() {
           </a>
           <div className="flex flex-col gap-5 md:items-end">
             <nav aria-label="Navegación del pie"><ul className="flex flex-wrap gap-x-5 gap-y-2">{NAV_LINKS.map(link => <li key={link.href}><a href={link.href} className="inline-flex min-h-11 items-center rounded-md text-sm text-slate-300 hover:text-white">{link.label}</a></li>)}</ul></nav>
-            <div className="flex gap-4">{socials.map(({ channel, href, label }) => <a key={label} href={href} target={channel === "email" ? undefined : "_blank"} rel={channel === "email" ? undefined : "noopener noreferrer"} aria-label={label} className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 hover:bg-white/5"><ContactIcon channel={channel} size={24} /></a>)}</div>
           </div>
         </div>
         <p className="mt-6 border-t border-white/10 pt-5 text-xs text-slate-400">© {new Date().getFullYear()} Leia Lab · Hecho Con ❤️ Por MARIANO ARRIETA</p>
