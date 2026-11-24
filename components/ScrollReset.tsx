@@ -6,7 +6,14 @@ export default function ScrollReset() {
     if ("scrollRestoration" in history) {
       history.scrollRestoration = "manual";
     }
-    window.scrollTo(0, 0);
+    if (location.hash) {
+      history.replaceState(history.state, "", location.pathname + location.search);
+    }
+    // Apply again after hydration, which can focus the initial hash target.
+    const startAtTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    startAtTop();
+    const frame = requestAnimationFrame(startAtTop);
+    return () => cancelAnimationFrame(frame);
   }, []);
   return null;
 }

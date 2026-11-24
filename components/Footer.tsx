@@ -13,7 +13,7 @@ export default function Footer() {
             <nav aria-label="Navegación del pie"><ul className="flex flex-wrap gap-x-5 gap-y-2">{NAV_LINKS.map(link => <li key={link.href}><a href={link.href} className="inline-flex min-h-11 items-center rounded-md text-sm text-slate-300 hover:text-white">{link.label}</a></li>)}</ul></nav>
           </div>
         </div>
-        <p className="mt-6 border-t border-white/10 pt-5 text-xs text-slate-400">© {new Date().getFullYear()} Leia Lab · Hecho Con ❤️ Por MARIANO ARRIETA</p>
+        <p className="mt-6 border-t border-white/10 pt-5 text-center text-xs text-slate-400">© {new Date().getFullYear()} Leia Lab · Hecho Con ❤️ Por MARIANO ARRIETA</p>
       </div>
     </footer>
   );

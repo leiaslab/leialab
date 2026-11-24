@@ -38,7 +38,7 @@ export default function Apps() {
     <section id="proyectos" aria-labelledby="projects-title" className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
       <h2 id="projects-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Casos de uso</h2>
       <p className="mt-3 text-base text-slate-300">Proyectos para resolver tareas concretas en distintos negocios.</p>
-      <div className="mt-7 grid gap-4 sm:grid-cols-2">
+      <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:auto-rows-fr">
         {cases.map(project => {
           const Icon = project.icon;
           return (

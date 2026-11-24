@@ -6,7 +6,7 @@ import { CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_URL } from "./
 export default function Contact() {
   return (
     <section id="contacto" aria-labelledby="contact-title" className="border-y border-white/10 bg-white/[0.015]">
-      <div className="mx-auto grid max-w-6xl gap-9 px-4 py-14 sm:px-6 sm:py-16 md:grid-cols-2 md:gap-14">
+      <div className="mx-auto grid max-w-6xl gap-9 px-4 py-14 sm:px-6 sm:py-16 md:grid-cols-2 md:gap-12">
         <div>
           <h2 id="contact-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Contame tu idea.</h2>
           <p className="mt-3 max-w-md text-base leading-relaxed text-slate-300">Lo vemos juntos y buscamos una solución simple para tu negocio.</p>
