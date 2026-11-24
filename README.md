@@ -9,9 +9,9 @@ npm ci
 npm run dev
 ```
 
-La página se encuentra en `app/page.tsx` y tiene cuatro secciones: Inicio, Servicios, Proyectos y Contacto. Los enlaces de navegación están centralizados en `components/navigation.ts`; WhatsApp e Instagram, en `components/contact-info.ts`.
+La página se encuentra en `app/page.tsx` y tiene cuatro secciones: Inicio, Servicios, Casos de uso y Contacto. Los enlaces de navegación están centralizados en `components/navigation.ts`; WhatsApp e Instagram, en `components/contact-info.ts`.
 
-El contacto principal es WhatsApp. LeiaBot prepara una consulta local en el navegador y abre WhatsApp para que la persona complete el envío; no envía mensajes a un servidor. El historial se conserva en el navegador y se puede reiniciar desde el chat. No hay un formulario de correo activo.
+El contacto principal es WhatsApp. LeiaBot prepara una consulta local en el navegador y, al enviar desde el formulario o tocar el botón de WhatsApp, abre la conversación para que la persona confirme el envío; no envía mensajes a un servidor. El historial se conserva en el navegador y se puede reiniciar desde el chat. No hay un formulario de correo activo.
 
 Las partículas y el cubo respetan la preferencia de movimiento reducido. Las capturas públicas de los proyectos y sus fuentes están en `public/projects/`; los recursos oficiales de las marcas y sus fuentes, en `public/brand/`.
 
@@ -23,4 +23,4 @@ npm run build
 npm start
 ```
 
-El repositorio `leiaslab/leialab` despliega en Vercel al actualizar `main`. Los proyectos enlazados desde el portfolio son aplicaciones independientes.
+El repositorio `leiaslab/leialab` despliega en Vercel al actualizar `main`. Los proyectos enlazados desde el portfolio son aplicaciones independientes. Los casos sin demo pública verificada ofrecen una consulta por WhatsApp en lugar de un enlace de acceso.

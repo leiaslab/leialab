@@ -9,12 +9,12 @@ import { WHATSAPP_URL } from "./contact-info";
 type Message = { id: string; from: "bot" | "user"; text: string; timestamp: number };
 const STORAGE_KEY = "leiabot_v3";
 const OPTIONS = ["Una app para mi negocio", "Automatizar tareas", "Pedir presupuesto"];
-const NEXT_STEP = "Podés agregar más detalles o continuar en WhatsApp para hablar con Mariano.";
+const NEXT_STEP = "Tu consulta está preparada. Tocá Enviar por WhatsApp y confirmá el envío allí para que le llegue a Mariano.";
 function message(from: Message["from"], text: string): Message {
   return { id: Date.now().toString(36) + Math.random().toString(36).slice(2), from, text, timestamp: Date.now() };
 }
 function welcome(): Message[] {
-  return [message("bot", "Hola, soy LeiaBot. Contame tu idea y prepará tu consulta para Mariano. La enviás al continuar en WhatsApp.")];
+  return [message("bot", "¡Guau guau! Soy LeiaBot 🐾 Contame qué necesitás y tocá Enviar por WhatsApp para hablar con Mariano.")];
 }
 function isMessage(value: unknown): value is Message {
   if (!value || typeof value !== "object") return false;
@@ -67,7 +67,12 @@ export default function LeiaBot() {
     setMessages(current => [...current, next, ...(current.some(item => item.from === "user") ? [] : [guidance])].slice(-50));
     setInput("");
   }
-  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); addText(input); }
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!input.trim()) return;
+    continueOnWhatsApp();
+    addText(input);
+  }
   function continueOnWhatsApp() {
     const lines = messages.filter(item => item.from === "user").slice(-20).map(item => item.text);
     if (input.trim()) lines.push(input.trim());
@@ -81,13 +86,14 @@ export default function LeiaBot() {
   }
   return (
     <>
+      {!open && <div aria-hidden="true" className="leiabot-greeting pointer-events-none fixed bottom-[88px] right-4 z-[100] max-w-[calc(100vw-32px)] rounded-2xl rounded-br-sm border border-violet-400/40 bg-[#1c1c32] px-4 py-2.5 text-sm font-semibold text-violet-200 shadow-lg">¡Guau guau! Soy LeiaBot 🐾<span className="absolute -bottom-1.5 right-5 h-3 w-3 rotate-45 border-b border-r border-violet-400/40 bg-[#1c1c32]" /></div>}
       <button ref={toggleRef} type="button" onClick={toggle} aria-label={open ? "Minimizar chat" : "Abrir chat"} aria-expanded={open} aria-controls="leiabot-panel" className="fixed bottom-4 right-4 z-[100] flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/25 bg-[#171725] shadow-lg sm:h-16 sm:w-16">
-        {open ? <X size={24} aria-hidden="true" /> : <Image src="/images/leiabot.png" alt="" width={64} height={64} className="h-full w-full object-cover" />}
+        {open ? <X size={24} aria-hidden="true" /> : <Image src="/images/leiabot.png" alt="" width={64} height={64} className="leiabot-wag h-full w-full object-cover" />}
       </button>
       {open && (
         <div ref={panelRef} id="leiabot-panel" role="region" aria-label="Chat con LeiaBot" className="fixed bottom-[88px] right-4 z-[99] flex h-[min(520px,calc(100dvh-104px))] w-[min(380px,calc(100vw-32px))] min-h-0 flex-col overflow-hidden rounded-2xl border border-violet-400/35 bg-[#11111c] shadow-2xl">
           <div className="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
-            <div className="flex items-center gap-3"><Image src="/images/leiabot.png" alt="" width={36} height={36} className="h-9 w-9 rounded-full object-cover" /><div><p className="font-semibold">LeiaBot</p><p className="text-xs text-slate-300">Preparemos tu consulta</p></div></div>
+            <div className="flex items-center gap-3"><Image src="/images/leiabot.png" alt="" width={36} height={36} className="h-9 w-9 rounded-full object-cover" /><div><p className="font-semibold">LeiaBot</p><p className="text-xs text-slate-300">Hablá con Mariano por WhatsApp</p></div></div>
             <div className="flex"><button type="button" onClick={clear} aria-label="Reiniciar conversación" title="Reiniciar conversación" className="rounded-lg p-2.5 text-slate-300 hover:bg-white/5"><RotateCcw size={17} aria-hidden="true" /></button><button type="button" onClick={() => { setOpen(false); toggleRef.current?.focus(); }} aria-label="Minimizar ventana de chat" className="rounded-lg p-2.5 text-slate-300 hover:bg-white/5"><X size={19} aria-hidden="true" /></button></div>
           </div>
           <div ref={logRef} role="log" aria-label="Conversación" aria-live="polite" className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
@@ -98,10 +104,10 @@ export default function LeiaBot() {
             <form onSubmit={submit} className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-3 py-2">
               <label htmlFor="leiabot-message" className="sr-only">Tu consulta para Mariano</label>
               <input ref={inputRef} id="leiabot-message" value={input} onChange={event => setInput(event.target.value)} maxLength={600} aria-describedby="leiabot-help" placeholder="Contame qué necesitás..." className="min-w-0 flex-1 rounded bg-transparent py-1 text-sm text-white placeholder:text-slate-400" />
-              <button type="submit" aria-label="Agregar mensaje" disabled={!input.trim()} className="rounded-lg bg-violet-600 p-2 text-white hover:bg-violet-500 disabled:opacity-40"><Send size={17} aria-hidden="true" /></button>
+              <button type="submit" aria-label="Enviar por WhatsApp" title="Enviar por WhatsApp" disabled={!input.trim()} className="rounded-lg bg-violet-600 p-2 text-white hover:bg-violet-500 disabled:opacity-40"><Send size={17} aria-hidden="true" /></button>
             </form>
-            <button type="button" onClick={continueOnWhatsApp} className="mt-3 flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-green-500/35 bg-green-500/10 px-3 py-2 text-sm font-semibold text-green-300 hover:bg-green-500/15"><ContactIcon channel="whatsapp" size={18} />Continuar en WhatsApp</button>
-            <p id="leiabot-help" className="mt-2 text-center text-xs text-slate-300">El envío se completa en WhatsApp.</p>
+            <button type="button" onClick={continueOnWhatsApp} className="mt-3 flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-green-500/35 bg-green-500/10 px-3 py-2 text-sm font-semibold text-green-300 hover:bg-green-500/15"><ContactIcon channel="whatsapp" size={18} />Enviar por WhatsApp</button>
+            <p id="leiabot-help" className="mt-2 text-center text-xs text-slate-300">Se abre WhatsApp. Confirmá el envío allí.</p>
           </div>
         </div>
       )}

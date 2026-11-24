@@ -1,4 +1,17 @@
 {
-  "organiza.webp": { "source": "https://organiza-semanal.vercel.app/", "kind": "Public application screenshot", "captured": "2026-11-24" },
-  "hanna.webp": { "source": "https://la-cucha-de-hanna.vercel.app/", "kind": "Public sign-in screen screenshot; no account access", "captured": "2026-11-24" }
+  "organiza.webp": {
+    "source": "https://organiza-semanal.vercel.app/",
+    "kind": "Public application screenshot",
+    "captured": "2026-11-24"
+  },
+  "hanna.webp": {
+    "source": "https://la-cucha-de-hanna.vercel.app/",
+    "kind": "Public sign-in screen screenshot; no account access",
+    "captured": "2026-11-24"
+  },
+  "trebol": {
+    "source": "https://asistencias-punto-mariano.mariano1983.chatgpt.site/",
+    "kind": "User-provided public access page; title and description verified without signing in",
+    "verified": "2026-11-24"
+  }
 }

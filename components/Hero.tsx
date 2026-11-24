@@ -16,7 +16,7 @@ export default function Hero() {
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-500">
             Hablemos por WhatsApp <ArrowUpRight size={18} aria-hidden="true" />
           </a>
-          <a href="#proyectos" className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm font-medium text-slate-200 hover:text-violet-300">Ver proyectos <ArrowRight size={17} aria-hidden="true" /></a>
+          <a href="#proyectos" className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm font-medium text-slate-200 hover:text-violet-300">Ver casos de uso <ArrowRight size={17} aria-hidden="true" /></a>
         </div>
       </div>
       <div aria-hidden="true" className="pointer-events-none relative z-10 hidden h-48 w-48 items-center justify-center lg:flex">
