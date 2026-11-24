@@ -71,12 +71,12 @@ const apps = [
 
 export default function Apps() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const visibleCount = 3;
+  const lastIndex = apps.length - 1;
 
   const prev = () =>
     setActiveIndex((i) => Math.max(0, i - 1));
   const next = () =>
-    setActiveIndex((i) => Math.min(apps.length - visibleCount, i + 1));
+    setActiveIndex((i) => Math.min(lastIndex, i + 1));
 
   return (
     <section id="apps" className="py-14 relative overflow-hidden scroll-mt-20">
@@ -107,14 +107,27 @@ export default function Apps() {
         </div>
 
         {/* Mobile carousel */}
-        <div className="md:hidden">
+        <div
+          className="md:hidden"
+          role="region"
+          aria-roledescription="carrusel"
+          aria-label="Aplicaciones disponibles"
+        >
           <div className="overflow-hidden">
             <div
-              className="flex transition-transform duration-400 ease-in-out"
+              id="apps-carousel"
+              className="flex transition-transform duration-400 ease-in-out motion-reduce:transition-none"
               style={{ transform: `translateX(-${activeIndex * 100}%)` }}
             >
-              {apps.map((app) => (
-                <div key={app.title} className="min-w-full px-1">
+              {apps.map((app, i) => (
+                <div
+                  key={app.title}
+                  className="w-full shrink-0 px-1"
+                  role="group"
+                  aria-roledescription="diapositiva"
+                  aria-label={`Aplicación ${i + 1} de ${apps.length}`}
+                  aria-hidden={i !== activeIndex}
+                >
                   <AppCard app={app} />
                 </div>
               ))}
@@ -124,28 +137,29 @@ export default function Apps() {
           {/* Carousel controls */}
           <div className="flex items-center justify-center gap-4 mt-6">
             <button
+              type="button"
               onClick={prev}
               disabled={activeIndex === 0}
+              aria-label="Aplicación anterior"
+              aria-controls="apps-carousel"
               className="p-2 rounded-full border border-purple-700/50 text-gray-400 hover:text-white disabled:opacity-30 transition-all"
             >
               <ChevronLeft size={18} />
             </button>
-            <div className="flex gap-2">
-              {apps.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveIndex(i)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    i === activeIndex
-                      ? "bg-pink-500 w-6"
-                      : "bg-gray-600 hover:bg-gray-400"
-                  }`}
-                />
-              ))}
-            </div>
+            <span
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="min-w-16 text-center text-sm text-gray-400 tabular-nums"
+            >
+              {activeIndex + 1} de {apps.length}
+            </span>
             <button
+              type="button"
               onClick={next}
-              disabled={activeIndex === apps.length - 1}
+              disabled={activeIndex === lastIndex}
+              aria-label="Aplicación siguiente"
+              aria-controls="apps-carousel"
               className="p-2 rounded-full border border-purple-700/50 text-gray-400 hover:text-white disabled:opacity-30 transition-all"
             >
               <ChevronRight size={18} />

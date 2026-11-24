@@ -8,6 +8,7 @@ import { Send, Mail, CheckCircle2, XCircle } from "lucide-react";
 import FormField from "./FormField";
 import Button from "./Button";
 import { contactSchema, type ContactFormData } from "./schemas";
+import { WHATSAPP_URL } from "./contact-info";
 
 export default function Contact() {
   const [sent, setSent] = useState(false);
@@ -151,7 +152,7 @@ export default function Contact() {
             </p>
 
             <a
-              href="https://wa.me/541128365690"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex items-center gap-4 bg-[#0d0d1a] border border-green-900/40 hover:border-green-600/50 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5"
@@ -166,7 +167,7 @@ export default function Contact() {
               </div>
               <div>
                 <p className="text-white font-semibold text-sm">WhatsApp</p>
-                <p className="text-gray-500 text-xs">Respuesta rápida</p>
+                <p className="text-gray-500 text-xs">+54 9 11 2836-5690</p>
               </div>
             </a>
 

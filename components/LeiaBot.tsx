@@ -13,6 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import Image from "next/image";
+import { WHATSAPP_URL } from "./contact-info";
 
 type Message = {
   id: string;
@@ -50,7 +51,6 @@ const AUTO_RESPONSES: Record<string, string> = {
 };
 
 const STORAGE_KEY = "leiabot_v3";
-const WA_NUMBER   = "541132751198";
 
 function fmtTime(ts: number) {
   return new Date(ts).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
@@ -202,7 +202,7 @@ export default function LeiaBot() {
   function sendWhatsApp() {
     const lines = messages.map(m => `${m.from === "bot" ? "LeiaBot" : "Vos"}: ${m.text}`);
     const text  = encodeURIComponent(`Hola Mariano, resumen del chat en LeiaBot:\n\n${lines.join("\n")}`);
-    window.open(`https://wa.me/${WA_NUMBER}?text=${text}`, "_blank");
+    window.open(`${WHATSAPP_URL}?text=${text}`, "_blank");
   }
 
   function handleClear() {

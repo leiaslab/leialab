@@ -1,5 +1,6 @@
 import { MessageCircle, AtSign, Mail } from "lucide-react";
 import Image from "next/image";
+import { WHATSAPP_URL } from "./contact-info";
 
 const navLinks = [
   { label: "Inicio", href: "#inicio" },
@@ -11,7 +12,7 @@ const navLinks = [
 ];
 
 const socials = [
-  { icon: MessageCircle, href: "https://wa.me/541128365690", label: "WhatsApp" },
+  { icon: MessageCircle, href: WHATSAPP_URL, label: "WhatsApp" },
   { icon: AtSign, href: "https://www.instagram.com/leialab.app?igsh=bXF3aDdkbXh6dnow&utm_source=qr", label: "Instagram" },
   { icon: Mail, href: "mailto:hola@leialab.com", label: "Email" },
 ];
