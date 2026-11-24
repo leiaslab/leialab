@@ -13,7 +13,7 @@ La página se encuentra en `app/page.tsx` y tiene cuatro secciones: Inicio, Serv
 
 El contacto principal es WhatsApp. Al tocar LeiaBot o su saludo animado se abre directamente la conversación con Mariano, con un mensaje inicial preparado para que la persona confirme el envío en WhatsApp. El acceso funciona como un enlace HTML y no requiere JavaScript. No hay un chat intermedio, almacenamiento local de consultas ni un formulario de correo activo.
 
-Al abrir o recargar la página, se inicia desde arriba y se descarta el fragmento de sección de la URL. La navegación entre secciones funciona normalmente después de esa carga inicial.
+Al abrir o recargar la página, se inicia desde arriba y se descarta el fragmento de sección de la URL. Un resguardo breve corrige la restauración tardía del navegador; se cancela al tocar, desplazar o usar el teclado. La navegación entre secciones funciona normalmente después de esa carga inicial.
 
 Las partículas y el cubo respetan la preferencia de movimiento reducido. Las capturas públicas de los proyectos y sus fuentes están en `public/projects/`; los recursos oficiales de las marcas y sus fuentes, en `public/brand/`.
 
