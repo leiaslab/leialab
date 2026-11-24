@@ -1,12 +1,17 @@
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 import ContactIcon from "./ContactIcon";
 import { CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
+
+const channels = [
+  { channel: "whatsapp", label: "WhatsApp", detail: "+54 9 11 2836-5690", href: WHATSAPP_URL },
+  { channel: "instagram", label: "Instagram", detail: "@" + INSTAGRAM_HANDLE, href: INSTAGRAM_URL },
+  ...(CONTACT_EMAIL ? [{ channel: "email", label: "Email", detail: CONTACT_EMAIL, href: `mailto:${CONTACT_EMAIL}` } as const] : []),
+] as const;
 
 export default function Contact() {
   return (
     <section id="contacto" aria-labelledby="contact-title" className="border-y border-white/10 bg-white/[0.015]">
-      <div className="mx-auto grid max-w-6xl gap-9 px-4 py-14 sm:px-6 sm:py-16 md:grid-cols-2 md:gap-12">
+      <div className="mx-auto grid max-w-6xl gap-9 px-4 py-14 sm:px-6 sm:py-16 md:grid-cols-2 md:items-center md:gap-12">
         <div>
           <h2 id="contact-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">Contame tu idea.</h2>
           <p className="mt-3 max-w-md text-base leading-relaxed text-slate-300">Lo vemos juntos y buscamos una solución simple para tu negocio.</p>
@@ -18,16 +23,16 @@ export default function Contact() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-start justify-center">
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="flex w-full items-center gap-4 rounded-2xl border border-green-500/30 bg-green-500/[0.06] p-5 transition-colors hover:bg-green-500/10">
-            <ContactIcon channel="whatsapp" size={40} />
-            <div className="min-w-0 flex-1"><p className="text-base font-semibold">Hablemos por WhatsApp</p><p className="mt-1 text-sm text-slate-300">+54 9 11 2836-5690</p></div>
-            <ArrowUpRight size={19} aria-hidden="true" className="shrink-0 text-slate-300" />
-          </a>
-          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-4">
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-slate-300 hover:text-white"><ContactIcon channel="instagram" size={24} />@{INSTAGRAM_HANDLE}</a>
-            {CONTACT_EMAIL && <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-slate-300 hover:text-white"><ContactIcon channel="email" size={24} />{CONTACT_EMAIL}</a>}
-          </div>
+        <div role="group" aria-label="Canales de contacto" className="grid w-full gap-3">
+          {channels.map(({ channel, label, detail, href }) => (
+            <a key={channel} href={href} target={channel === "email" ? undefined : "_blank"} rel={channel === "email" ? undefined : "noopener noreferrer"} className={"grid w-full grid-cols-[40px_minmax(0,1fr)] items-center gap-3 rounded-xl border p-4 transition-colors " + (channel === "whatsapp" ? "border-green-500/30 bg-green-500/[0.06] hover:bg-green-500/10" : "border-white/10 bg-[#101019] hover:bg-white/5")}>
+              <span className="flex h-10 w-10 items-center justify-center"><ContactIcon channel={channel} size={32} /></span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold leading-5 text-white">{label}</span>
+                <span className="mt-1 block text-sm leading-5 text-slate-300 [overflow-wrap:anywhere]">{detail}</span>
+              </span>
+            </a>
+          ))}
         </div>
       </div>
     </section>
