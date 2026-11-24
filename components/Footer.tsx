@@ -1,6 +1,6 @@
-import { MessageCircle, AtSign, Mail } from "lucide-react";
 import Image from "next/image";
 import { WHATSAPP_URL } from "./contact-info";
+import ContactIcon from "./ContactIcon";
 
 const navLinks = [
   { label: "Inicio", href: "#inicio" },
@@ -12,10 +12,10 @@ const navLinks = [
 ];
 
 const socials = [
-  { icon: MessageCircle, href: WHATSAPP_URL, label: "WhatsApp" },
-  { icon: AtSign, href: "https://www.instagram.com/leialab.app?igsh=bXF3aDdkbXh6dnow&utm_source=qr", label: "Instagram" },
-  { icon: Mail, href: "mailto:hola@leialab.com", label: "Email" },
-];
+  { channel: "whatsapp", href: WHATSAPP_URL, label: "WhatsApp" },
+  { channel: "instagram", href: "https://www.instagram.com/leialab.app?igsh=bXF3aDdkbXh6dnow&utm_source=qr", label: "Instagram" },
+  { channel: "email", href: "mailto:hola@leialab.com", label: "Email" },
+] as const;
 
 export default function Footer() {
   return (
@@ -63,7 +63,7 @@ export default function Footer() {
               Contacto
             </p>
             <div className="flex gap-3">
-              {socials.map(({ icon: Icon, href, label }) => (
+              {socials.map(({ channel, href, label }) => (
                 <a
                   key={label}
                   href={href}
@@ -72,7 +72,7 @@ export default function Footer() {
                   aria-label={label}
                   className="p-2.5 rounded-xl bg-[#0d0d1a] border border-purple-900/30 text-gray-400 hover:text-white hover:border-purple-600/50 transition-all"
                 >
-                  <Icon size={18} />
+                  <ContactIcon channel={channel} size={24} />
                 </a>
               ))}
             </div>

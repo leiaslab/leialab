@@ -1,0 +1,14 @@
+{
+  "whatsapp.svg": {
+    "source": "https://www.meta.com/brand/resources/whatsapp/whatsapp-brand/",
+    "archive": "WhatsApp-Brand-Resource-Center.zip",
+    "asset": "01_Glyph/01_Digital RGB/03_SVG/Digital_Glyph_Green_RGB_2026.svg",
+    "processing": "Official SVG, unchanged."
+  },
+  "instagram.png": {
+    "source": "https://www.meta.com/brand/resources/instagram/instagram-brand/",
+    "archive": "IG_brand_asset_pack_2023.zip",
+    "asset": "01 Static Glyph/01 Gradient Glyph/Instagram_Glyph_Gradient.png",
+    "processing": "Official PNG resized proportionally to 144px for display. No artwork or color changes."
+  }
+}
