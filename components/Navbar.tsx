@@ -19,6 +19,17 @@ export default function Navbar() {
 
   return (
     <header className="absolute inset-x-0 top-0 z-50">
+      {/* Desktop logo stays inside the viewport at every screen width. */}
+      <Link href="/" className="absolute left-6 top-8 z-50 hidden xl:block">
+        <Image
+          src="/leia-logo.png"
+          alt="Leia Lab"
+          width={224}
+          height={224}
+          sizes="(min-width: 1400px) 224px, 16vw"
+          className="h-auto w-[clamp(10rem,16vw,14rem)] object-contain"
+        />
+      </Link>
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-32 sm:h-40 xl:h-16 relative">
 
         {/* Logo mobile — centrado, se desvanece al abrir el menú */}
@@ -38,21 +49,6 @@ export default function Navbar() {
             />
           </Link>
         </div>
-
-        {/* Logo desktop — posición decorativa sobre el hero */}
-        <Link href="/" className="relative z-50 flex-shrink-0 hidden xl:block">
-          <Image
-            src="/leia-logo.png"
-            alt="Leia Lab"
-            width={360}
-            height={360}
-            sizes="360px"
-            className="w-[360px] max-w-none h-auto object-contain"
-            style={{
-              transform: "translateY(50%) translateX(clamp(-152px, calc(-1 * (max(0px, (100vw - 1280px) / 2) + 16px) - 76px), -92px))"
-            }}
-          />
-        </Link>
 
         {/* Desktop links — centrados */}
         <ul className="hidden xl:flex items-center gap-0.5 absolute left-1/2 top-[calc(50%+1cm)] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
