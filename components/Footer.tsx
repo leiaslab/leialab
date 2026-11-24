@@ -22,7 +22,7 @@ export default function Footer() {
             <div className="flex gap-4">{socials.map(({ channel, href, label }) => <a key={label} href={href} target={channel === "email" ? undefined : "_blank"} rel={channel === "email" ? undefined : "noopener noreferrer"} aria-label={label} className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 hover:bg-white/5"><ContactIcon channel={channel} size={24} /></a>)}</div>
           </div>
         </div>
-        <p className="mt-6 border-t border-white/10 pt-5 text-xs text-slate-400">© {new Date().getFullYear()} Leia Lab · Mariano Arrieta</p>
+        <p className="mt-6 border-t border-white/10 pt-5 text-xs text-slate-400">© {new Date().getFullYear()} Leia Lab · Hecho Con ❤️ Por MARIANO ARRIETA</p>
       </div>
     </footer>
   );
