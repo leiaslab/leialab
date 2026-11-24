@@ -19,9 +19,6 @@ export const metadata: Metadata = {
     "SaaS",
     "Leia Lab",
   ],
-  icons: {
-    icon: "/leialab_logo.png",
-  },
 };
 
 export default function RootLayout({
