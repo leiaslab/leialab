@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import ContactIcon from "./ContactIcon";
-import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
+import { CONTACT_EMAIL, INSTAGRAM_HANDLE, INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
 
 export default function Contact() {
   return (
@@ -26,7 +26,7 @@ export default function Contact() {
           </a>
           <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-4">
             <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-slate-300 hover:text-white"><ContactIcon channel="instagram" size={24} />@{INSTAGRAM_HANDLE}</a>
-            <a href="mailto:hola@leialab.com" className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-slate-300 hover:text-white"><ContactIcon channel="email" size={24} />hola@leialab.com</a>
+            {CONTACT_EMAIL && <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex min-h-11 items-center gap-2 rounded-md text-sm text-slate-300 hover:text-white"><ContactIcon channel="email" size={24} />{CONTACT_EMAIL}</a>}
           </div>
         </div>
       </div>

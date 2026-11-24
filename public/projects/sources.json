@@ -9,9 +9,14 @@
     "kind": "Public sign-in screen screenshot; no account access",
     "captured": "2026-11-24"
   },
-  "trebol": {
+  "trebol.webp": {
     "source": "https://asistencias-punto-mariano.mariano1983.chatgpt.site/",
-    "kind": "User-provided public access page; title and description verified without signing in",
-    "verified": "2026-11-24"
+    "kind": "Public sign-in screen screenshot; no account access",
+    "captured": "2026-11-24"
+  },
+  "timbre.webp": {
+    "source": "https://timbre-qr-seven.vercel.app/admin",
+    "kind": "Public sign-in screen screenshot; no account access",
+    "captured": "2026-11-24"
   }
 }

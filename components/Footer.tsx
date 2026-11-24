@@ -1,12 +1,12 @@
 import Image from "next/image";
 import ContactIcon from "./ContactIcon";
-import { INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
+import { CONTACT_EMAIL, INSTAGRAM_URL, WHATSAPP_URL } from "./contact-info";
 import { NAV_LINKS } from "./navigation";
 
 const socials = [
   { channel: "whatsapp", href: WHATSAPP_URL, label: "WhatsApp" },
   { channel: "instagram", href: INSTAGRAM_URL, label: "Instagram" },
-  { channel: "email", href: "mailto:hola@leialab.com", label: "Email" },
+  ...(CONTACT_EMAIL ? [{ channel: "email", href: `mailto:${CONTACT_EMAIL}`, label: "Email" } as const] : []),
 ] as const;
 
 export default function Footer() {
