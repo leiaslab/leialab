@@ -19,11 +19,11 @@ export default function Navbar() {
 
   return (
     <header className="absolute inset-x-0 top-0 z-50">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-16 relative">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center h-32 sm:h-40 xl:h-16 relative">
 
         {/* Logo mobile — centrado, se desvanece al abrir el menú */}
         <div
-          className={`absolute left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-300 ease-in-out ${
+          className={`absolute left-1/2 -translate-x-1/2 z-50 xl:hidden transition-all duration-300 ease-in-out ${
             open ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100"
           }`}
         >
@@ -31,29 +31,31 @@ export default function Navbar() {
             <Image
               src="/leia-logo.png"
               alt="Leia Lab"
-              width={64}
-              height={64}
-              className="h-14 w-14 object-contain drop-shadow-[0_0_10px_rgba(233,30,140,0.5)]"
+              width={128}
+              height={128}
+              sizes="(min-width: 640px) 144px, 112px"
+              className="h-28 w-28 sm:h-36 sm:w-36 object-contain drop-shadow-[0_0_10px_rgba(233,30,140,0.5)]"
             />
           </Link>
         </div>
 
         {/* Logo desktop — posición decorativa sobre el hero */}
-        <Link href="/" className="relative z-50 flex-shrink-0 hidden md:block">
+        <Link href="/" className="relative z-50 flex-shrink-0 hidden xl:block">
           <Image
             src="/leia-logo.png"
             alt="Leia Lab"
-            width={298}
-            height={298}
-            className="object-contain"
+            width={360}
+            height={360}
+            sizes="360px"
+            className="w-[360px] max-w-none h-auto object-contain"
             style={{
-              transform: "translateY(151px) translateX(clamp(-152px, calc(-1 * (max(0px, (100vw - 1280px) / 2) + 16px) - 76px), -92px))"
+              transform: "translateY(50%) translateX(clamp(-152px, calc(-1 * (max(0px, (100vw - 1280px) / 2) + 16px) - 76px), -92px))"
             }}
           />
         </Link>
 
         {/* Desktop links — centrados */}
-        <ul className="hidden md:flex items-center gap-0.5 absolute left-1/2 top-[calc(50%+1cm)] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
+        <ul className="hidden xl:flex items-center gap-0.5 absolute left-1/2 top-[calc(50%+1cm)] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
           {links.map((link) => (
             <li key={link.href}>
               <a
@@ -79,7 +81,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger — derecha */}
         <button
-          className="md:hidden ml-auto p-2 text-gray-400 hover:text-white transition-colors z-50"
+          className="xl:hidden ml-auto p-2 text-gray-400 hover:text-white transition-colors z-50"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -89,7 +91,7 @@ export default function Navbar() {
 
       {/* Mobile menu — con transición de altura */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`xl:hidden overflow-hidden transition-all duration-300 ease-in-out ${
           open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
